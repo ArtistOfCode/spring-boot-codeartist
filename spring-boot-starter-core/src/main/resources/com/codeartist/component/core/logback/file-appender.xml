@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <!--日志文件名-->
+    <springProperty name="APP_NAME" source="spring.application.name" defaultValue="app"/>
+    <!--日志文件目录-->
+    <property name="LOG_HOME" value="${LOG_HOME:-/logs/spring}"/>
+    <property name="BACKUP_LOG_HOME" value="${BACKUP_LOG_HOME:-${LOG_HOME}/backup}"/>
+    <property name="JSON_LOG_HOME" value="${JSON_LOG_HOME:-${LOG_HOME}/json}"/>
+    <property name="BACKUP_JSON_LOG_HOME" value="${BACKUP_JSON_LOG_HOME:-${JSON_LOG_HOME}/backup}"/>
+
+    <include resource="com/codeartist/component/core/logback/base.xml"/>
+
+    <!-- 日志文件策略配置 -->
+    <springProfile name="!local">
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <File>${LOG_HOME}/${APP_NAME}.log</File>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${BACKUP_LOG_HOME}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>500MB</maxFileSize>
+                <maxHistory>31</maxHistory>
+                <totalSizeCap>20GB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+
+        <appender name="JSON-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <File>${JSON_LOG_HOME}/${APP_NAME}.log</File>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp>
+                        <timeZone>UTC</timeZone>
+                    </timestamp>
+                    <pattern>
+                        <pattern>
+                            {
+                            "level": "%p",
+                            "pid": "${PID:- }",
+                            "app": "${APP_NAME:- }",
+                            "trace-id": "%X{traceId:-}",
+                            "span-id": "%X{spanId:-}",
+                            "exportable": "%X{spanExportable:-}",
+                            "logger": "%logger",
+                            "message": "%m",
+                            "stack": "%wEx"
+                            }
+                        </pattern>
+                    </pattern>
+                </providers>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${BACKUP_JSON_LOG_HOME}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>7</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+    </springProfile>
+</included>

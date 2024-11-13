@@ -1,0 +1,11 @@
+# Auto Configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.codeartist.component.autoconfigure.web.WebAutoConfiguration,\
+com.codeartist.component.autoconfigure.metrics.MetricAutoConfiguration,\
+com.codeartist.component.autoconfigure.datasource.DataSourceAutoconfiguration,\
+com.codeartist.component.autoconfigure.mybatis.MyBatisAutoConfiguration,\
+com.codeartist.component.autoconfigure.cache.CacheAutoConfiguration,\
+com.codeartist.component.autoconfigure.mq.MqAutoConfiguration,\
+com.codeartist.component.autoconfigure.thread.ThreadAutoConfiguration,\
+com.codeartist.component.autoconfigure.feign.FeignClientsConfiguration,\
+com.codeartist.component.autoconfigure.sleuth.TraceAutoConfiguration

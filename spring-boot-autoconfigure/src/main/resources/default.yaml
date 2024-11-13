@@ -1,0 +1,65 @@
+# ============================================================
+# Spring Boot Autoconfigure
+spring.profiles.default: local
+
+# ============================================================
+# Spring Boot Logging
+logging.config: classpath:logback-spring.xml
+
+# ============================================================
+# Spring Boot i18n
+spring.messages.basename: i18n/messages,message/messages
+
+# ============================================================
+# Spring Jackson
+spring.jackson:
+  time-zone: GMT+8
+  date-format: yyyy-MM-dd HH:mm:ss
+
+# ============================================================
+# MyBatis Plus
+mybatis-plus:
+  global-config:
+    banner: false
+    db-config:
+      id-type: AUTO
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  type-aliases-package: ${spring.application.root-package}.**.entity
+
+# ============================================================
+# Spring Data H2
+spring.h2.console.enabled: false
+spring.h2.datasource.url: jdbc:h2:mem:default;MODE=MySQL;DATABASE_TO_LOWER=TRUE;INIT=RUNSCRIPT FROM 'classpath:sql/init.sql'
+# Spring Data Redis
+spring.data.redis.repositories.enabled: false
+
+# ============================================================
+# Spring Boot Actuator
+spring.cloud.discovery.client.health-indicator.enabled: false
+management.endpoint.health.show-details: always
+management.endpoints.web.exposure:
+  include: beans,health,configprops,env,info,loggers,prometheus,scheduledtasks,mappings,service-registry,features,gateway
+management.metrics.tags.application: ${spring.application.name}
+management.info.git.mode: FULL
+management.health.mail.enabled: false
+
+# ============================================================
+# Spring Cloud Sleuth
+spring.sleuth.redis.enabled: false
+spring.sleuth.scheduled.enabled: false
+
+# ============================================================
+# Spring Cloud Consul
+# 默认使用Nomad分配的IP和Port来用作于服务发现
+service.ip: ${NOMAD_IP_http:127.0.0.1}
+service.port: ${NOMAD_HOST_PORT_http:8080}
+spring.cloud.consul.discovery:
+  ip-address: ${service.ip}
+  port: ${service.port}
+  instance-id: ${spring.application.name}-${service.ip}-${service.port}
+  prefer-ip-address: true
+  query-passing: true
+# 默认禁用动态加载配置
+spring.cloud.consul.config.watch.enabled: false

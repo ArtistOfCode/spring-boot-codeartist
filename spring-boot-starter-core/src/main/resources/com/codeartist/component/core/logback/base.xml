@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!--控制台输出-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--日志级别配置-->
+    <springProfile name="!prod">
+        <logger name="com.codeartist" level="DEBUG"/>
+    </springProfile>
+</included>

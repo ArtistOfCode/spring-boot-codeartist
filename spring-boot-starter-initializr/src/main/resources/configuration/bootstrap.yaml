@@ -1,0 +1,7 @@
+# Spring
+spring.profiles.active: local
+spring.application.name: # 应用名称
+# Spring Cloud Consul
+spring.cloud.consul.host:
+spring.cloud.consul.port: 80
+spring.cloud.consul.config.enabled: false

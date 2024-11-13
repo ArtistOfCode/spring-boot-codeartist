@@ -1,0 +1,19 @@
+# Spring
+spring.output.ansi.enabled: ALWAYS
+# Spring Datasource
+spring.datasource.url: ${spring.h2.datasource.url}
+spring.datasource.hikari.minimum-idle: 1
+spring.datasource.hikari.maximum-pool-size: 2
+spring.datasource.hikari.max-lifetime: 1200000
+spring.datasource.hikari.connection-test-query: SELECT 1
+spring.h2.console.enabled: false
+# Spring Redis
+spring.redis.host: 192.168.64.2
+spring.redis.timeout: 10s
+spring.redis.lettuce.shutdown-timeout: 1000ms
+spring.redis.lettuce.pool.max-active: 10
+spring.redis.lettuce.pool.max-idle: 8
+spring.redis.lettuce.pool.max-wait: -1ms
+spring.redis.lettuce.pool.min-idle: 0
+# Zipkin
+spring.zipkin.base-url:

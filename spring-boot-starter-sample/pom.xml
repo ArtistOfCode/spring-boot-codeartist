@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.codeartist</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>spring-boot-starter-sample</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>spring-boot-starter-sample</name>
+    <description>组件测试项目</description>
+
+    <modules>
+        <module>spring-boot-starter-core-sample</module>
+        <module>spring-boot-starter-generator-sample</module>
+        <module>spring-boot-starter-cache-sample</module>
+        <module>spring-boot-starter-datasource-sample</module>
+        <module>spring-boot-starter-mq-sample</module>
+    </modules>
+
+    <properties>
+        <!-- 项目配置 -->
+        <maven.package.skip>true</maven.package.skip>
+        <maven.install.skip>true</maven.install.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+</project>

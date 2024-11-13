@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="com/codeartist/component/core/logback/file-appender.xml"/>
+
+    <!-- 本地环境 -->
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- 测试环境 -->
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON-FILE"/>
+        </root>
+    </springProfile>
+
+    <!-- 生产环境 -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON-FILE"/>
+        </root>
+    </springProfile>
+</configuration>

@@ -1,0 +1,67 @@
+global:
+  groupId: com.codeartist
+initializr:
+  javaVersions:
+    - id: 1.8
+      default: true
+  group-id:
+    value: ${global.groupId}
+  artifact-id:
+    value: demo
+  version:
+    value: 1.0.0-SNAPSHOT
+  languages:
+    - name: Java
+      id: java
+      default: true
+  packagings:
+    - name: Jar
+      id: jar
+      default: true
+    - name: War
+      id: war
+      default: false
+  bootVersions:
+    - id: 1.0.0-SNAPSHOT
+      name: 1.0.0 (SNAPSHOT)
+      default: true
+    - id: 1.0.0.RELEASE
+      name: 1.0.0
+      default: false
+  types:
+    - name: Maven
+      id: maven-project
+      description: Generate a Maven based project archive
+      tags:
+        build: maven
+        format: project
+      default: true
+      action: /starter.zip
+  env:
+    maven:
+      parent:
+        groupId: ${global.groupId}
+        artifactId: spring-boot-starter-parent
+        version: 1.0.0-SNAPSHOT
+    repositories:
+      - name:
+  dependencies:
+    - name: Web
+      content:
+        - name: Web
+          id: web
+          groupId: ${global.groupId}
+          artifactId: spring-boot-starter-web
+          description: 码匠 SpringBoot Web 依赖
+    - name: 组件
+      content:
+        - name: Cache
+          id: cache
+          groupId: ${global.groupId}
+          artifactId: spring-boot-starter-cache
+          description: 码匠 SpringBoot 缓存组件依赖
+        - name: MQ
+          id: mq
+          groupId: ${global.groupId}
+          artifactId: spring-boot-starter-mq
+          description: 码匠 SpringBoot 消息队列组件依赖

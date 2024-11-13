@@ -1,0 +1,3 @@
+io.spring.initializr.generator.project.ProjectGenerationConfiguration=\
+com.codeartist.component.initializr.config.MavenProjectGenerationConfiguration,\
+com.codeartist.component.initializr.config.JavaProjectGenerationConfiguration

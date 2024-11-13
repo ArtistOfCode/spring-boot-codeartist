@@ -1,0 +1,22 @@
+# Spring
+spring.output.ansi.enabled: ALWAYS
+spring.profiles.active: local
+spring.application.name: cache-sample
+spring.application.root-package: com.codeartist.component.cache.sample
+spring.config.import: classpath:default.yaml
+# Spring Redis
+spring.redis.host: 10.0.178.39
+spring.redis.timeout: 10s
+spring.redis.lettuce.shutdown-timeout: 1000ms
+spring.redis.lettuce.pool.max-active: 10
+spring.redis.lettuce.pool.max-idle: 8
+spring.redis.lettuce.pool.max-wait: -1ms
+spring.redis.lettuce.pool.min-idle: 0
+# Spring Redis
+spring.redis.multi.test.host: 10.0.178.39
+spring.redis.multi.test.timeout: 10s
+spring.redis.multi.test.lettuce.shutdown-timeout: 1000ms
+spring.redis.multi.test.lettuce.pool.max-active: 10
+spring.redis.multi.test.lettuce.pool.max-idle: 8
+spring.redis.multi.test.lettuce.pool.max-wait: -1ms
+spring.redis.multi.test.lettuce.pool.min-idle: 0

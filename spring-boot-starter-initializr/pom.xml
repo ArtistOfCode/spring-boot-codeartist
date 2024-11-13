@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.codeartist</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>spring-boot-starter-initializr</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+
+    <properties>
+        <initializr-bom.version>0.13.0</initializr-bom.version>
+        <!-- 项目配置 -->
+        <maven.install.skip>true</maven.install.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.spring.initializr</groupId>
+                <artifactId>initializr-bom</artifactId>
+                <version>${initializr-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-generator-spring</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

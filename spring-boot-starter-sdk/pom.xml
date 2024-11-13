@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.codeartist</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>spring-boot-starter-sdk</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>spring-boot-starter-wechat-pay</module>
+    </modules>
+
+    <properties>
+        <wechatpay-java.version>0.2.12</wechatpay-java.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.wechatpay-apiv3</groupId>
+                <artifactId>wechatpay-java</artifactId>
+                <version>${wechatpay-java.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

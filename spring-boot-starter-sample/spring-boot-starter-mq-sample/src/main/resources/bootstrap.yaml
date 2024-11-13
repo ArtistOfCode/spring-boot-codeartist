@@ -1,0 +1,5 @@
+# Spring
+spring.profiles.active: local
+spring.application.name: mq-sample
+# Spring Cloud Consul
+spring.cloud.consul.enabled: false

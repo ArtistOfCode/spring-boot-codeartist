@@ -1,0 +1,27 @@
+# Spring
+spring.output.ansi.enabled: ALWAYS
+spring.profiles.active: local
+spring.application.name: datasource-sample
+spring.application.root-package: com.codeartist.component.datasource.sample
+spring.application.module-package: ${spring.application.root-package}.db1
+spring.config.import: classpath:default.yaml
+# Spring Cloud Consul
+spring.cloud.consul.enabled: false
+# Spring Datasource
+spring.datasource.multi:
+  db1:
+    url: jdbc:mysql://10.0.188.215:3306/test_db_1?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: dev
+    password: 19950121
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 1
+      connection-test-query: SELECT 1
+  db2:
+    url: jdbc:mysql://10.0.188.215:3306/test_db_2?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: dev
+    password: 19950121
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 1
+      connection-test-query: SELECT 1

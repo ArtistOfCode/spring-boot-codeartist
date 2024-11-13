@@ -16,7 +16,6 @@ tmp/**/*
 *~.nib
 .classpath
 .loadpath
-.git
 
 # maven
 target
