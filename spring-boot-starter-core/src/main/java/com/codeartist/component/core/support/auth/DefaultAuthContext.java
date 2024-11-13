@@ -2,7 +2,8 @@ package com.codeartist.component.core.support.auth;
 
 import com.codeartist.component.core.util.WebUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
+
+import java.util.Objects;
 
 /**
  * 默认权限上下文实现
@@ -14,9 +15,7 @@ public class DefaultAuthContext implements AuthContext {
 
     @Override
     public Long getRequiredUserId() {
-        Long userId = getUserId();
-        Assert.notNull(userId, "UserId is null.");
-        return userId;
+        return Objects.requireNonNull(getUserId(), "UserId is null");
     }
 
     public Long getUserId() {

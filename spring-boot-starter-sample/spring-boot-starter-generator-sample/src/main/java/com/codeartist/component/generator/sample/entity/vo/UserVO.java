@@ -1,11 +1,10 @@
 package com.codeartist.component.generator.sample.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 /**
  * 用户基本信息

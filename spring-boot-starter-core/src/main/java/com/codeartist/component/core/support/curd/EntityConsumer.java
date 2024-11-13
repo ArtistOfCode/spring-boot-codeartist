@@ -32,26 +32,34 @@ public interface EntityConsumer<P, D> {
 
     default void preConsumer(EntityContext<P, D> context) {
         StopWatch stopWatch = context.getStopWatch();
-        stopWatch.start(getClass().getSimpleName() + " Pre");
-        if (context.isSave()) {
-            preSave(context);
-        } else if (context.isUpdate()) {
-            preUpdate(context);
-        } else if (context.isDelete()) {
-            preDelete(context);
+        stopWatch.start(getClass().getSimpleName() + " Pre " + context.getAction().name());
+        switch (context.getAction()) {
+            case SAVE:
+                preSave(context);
+                break;
+            case UPDATE:
+                preUpdate(context);
+                break;
+            case DELETE:
+                preDelete(context);
+                break;
         }
         stopWatch.stop();
     }
 
     default void postConsumer(EntityContext<P, D> context) {
         StopWatch stopWatch = context.getStopWatch();
-        stopWatch.start(getClass().getSimpleName() + " Post");
-        if (context.isSave()) {
-            postSave(context);
-        } else if (context.isUpdate()) {
-            postUpdate(context);
-        } else if (context.isDelete()) {
-            postDelete(context);
+        stopWatch.start(getClass().getSimpleName() + " Post " + context.getAction().name());
+        switch (context.getAction()) {
+            case SAVE:
+                postSave(context);
+                break;
+            case UPDATE:
+                postUpdate(context);
+                break;
+            case DELETE:
+                postDelete(context);
+                break;
         }
         stopWatch.stop();
     }

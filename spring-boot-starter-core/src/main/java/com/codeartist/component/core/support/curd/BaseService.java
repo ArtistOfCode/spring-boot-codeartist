@@ -21,9 +21,14 @@ public interface BaseService<R, P> {
     PageInfo<R> get(P param);
 
     /**
-     * 保存或更新记录
+     * 保存记录
      */
     void save(P param);
+
+    /**
+     * 更新记录
+     */
+    void update(P param);
 
     /**
      * 通过ID删除记录

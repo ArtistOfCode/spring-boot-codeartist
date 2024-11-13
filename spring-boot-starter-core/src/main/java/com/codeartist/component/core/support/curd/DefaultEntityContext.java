@@ -14,15 +14,20 @@ import org.springframework.util.StopWatch;
 @Setter
 public class DefaultEntityContext<P, D> implements EntityContext<P, D> {
 
-    private boolean save;
-    private boolean update;
-    private boolean delete;
+    private EntityAction action;
     private P param;
     private D entity;
     private D oldEntity;
     private StopWatch stopWatch;
 
-    public DefaultEntityContext(String id) {
-        this.stopWatch = new StopWatch(id);
+    public DefaultEntityContext(EntityAction action) {
+        this.stopWatch = new StopWatch(action.name());
+    }
+
+    @Override
+    public void clear() {
+        setParam(null);
+        setEntity(null);
+        setOldEntity(null);
     }
 }

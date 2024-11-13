@@ -4,13 +4,20 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 删除状态
+ * 逻辑删除状态
  */
 @Getter
 @RequiredArgsConstructor
 public enum DeleteStatus {
 
-    UNDELETED(0), DELETED(1);
+    /**
+     * 有效的
+     */
+    VALID(0),
+    /**
+     * 无效的
+     */
+    INVALID(1);
 
     private final int status;
 }

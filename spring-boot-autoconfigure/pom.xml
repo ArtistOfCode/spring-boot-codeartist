@@ -86,6 +86,11 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- 第三方工具 -->
         <dependency>
             <groupId>org.springdoc</groupId>

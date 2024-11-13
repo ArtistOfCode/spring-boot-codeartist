@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 抽象控制类
  *
+ * @param <P> 请求参数对象类型
+ * @param <R> 响应实体对象类型
+ *
  * @author AiJiangnan
  * @date 2023/6/1
  */
@@ -38,11 +41,10 @@ public abstract class AbstractController<R, P extends PageParam> {
         getService().save(param);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @Operation(summary = "更新接口")
-    public void update(@PathVariable("id") Long id, @RequestBody P param) {
-        param.setId(id);
-        getService().save(param);
+    public void update(@RequestBody P param) {
+        getService().update(param);
     }
 
     @DeleteMapping("/{id}")

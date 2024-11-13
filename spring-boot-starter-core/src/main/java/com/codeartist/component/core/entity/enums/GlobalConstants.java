@@ -25,15 +25,4 @@ public interface GlobalConstants {
      * 默认标识
      */
     String DEFAULT = "default";
-    /**
-     * Session唯一标识
-     */
-    String SESSION_ID_COOKIE = "JSESSIONID";
-
-    interface RedisKey {
-        /**
-         * 验证码类型Key
-         */
-        String CAPTCHA_KEY = "CAPTCHA:";
-    }
 }

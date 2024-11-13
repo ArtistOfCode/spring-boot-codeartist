@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.entity.PageInfo;
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
-import com.codeartist.component.core.entity.event.EntityEvent;
 import com.codeartist.component.core.entity.param.PageParam;
 import com.codeartist.component.core.exception.BadRequestException;
 import com.codeartist.component.core.support.auth.AuthContext;
@@ -53,30 +52,75 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
     }
 
     @Override
-    public PageInfo<R> get(P p) {
-        D entity = getConverter().toDo(p);
+    public PageInfo<R> get(P param) {
+        D entity = getConverter().toDo(param);
 
         QueryWrapper<D> wrapper = Wrappers.query(entity)
-                .orderBy(p.getOrderBy() != null, p.getAsc(), p.getOrderBy());
+                .orderBy(param.getOrderBy() != null, param.getAsc(), param.getOrderBy());
 
-        IPage<D> page = getMapper().selectPage(p.page(), wrapper);
-        return new PageInfo<>(page, getConverter()::toVo);
+        IPage<D> page = getMapper().selectPage(param.page(), wrapper);
+        return new PageInfo<>(page, getConverter());
     }
 
     @Override
-    public void save(P p) {
-        basicCheck(p);
+    public void save(P param) {
+        basicCheck(param);
 
-        EntityContext<P, D> context = createContext(p.getId() == null ? "Save context" : "Update context");
-        context.setParam(p);
+        DefaultEntityContext<P, D> context = createContext(EntityAction.SAVE);
+        context.setParam(param);
 
         // 带有事务的业务
         getTransactionTemplate().executeWithoutResult(status -> {
-            if (p.getId() == null) {
-                doSave(p, context);
-            } else {
-                doUpdate(p, context);
+            Long userId = authContext.getUserId();
+            param.setCreateUser(userId);
+            param.setUpdateUser(userId);
+
+            businessCheck(context);
+
+            D entity = getConverter().toDo(param);
+            context.setEntity(entity);
+
+            preConsumer(context);
+            getMapper().insert(entity);
+            postConsumer(context);
+
+            SpringContext.publishEvent(new EntityEvent<>(this, context));
+            doFinally(context);
+        });
+    }
+
+    @Override
+    public void update(P param) {
+        if (param.getId() == null) {
+            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+        }
+
+        basicCheck(param);
+
+        DefaultEntityContext<P, D> context = createContext(EntityAction.UPDATE);
+        context.setParam(param);
+
+        // 带有事务的业务
+        getTransactionTemplate().executeWithoutResult(status -> {
+            Long userId = authContext.getUserId();
+
+            D old = getMapper().selectById(param.getId());
+            context.setOldEntity(old);
+
+            if (old == null) {
+                throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
             }
+            param.setUpdateUser(userId);
+
+            businessCheck(context);
+
+            D entity = getConverter().toDo(param);
+            context.setEntity(entity);
+            preConsumer(context);
+            getMapper().updateById(entity);
+            postConsumer(context);
+
+            SpringContext.publishEvent(new EntityEvent<>(this, context));
             doFinally(context);
         });
     }
@@ -88,9 +132,9 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
             return;
         }
 
-        EntityContext<P, D> context = createContext("Delete context");
-        context.setDelete(true);
+        DefaultEntityContext<P, D> context = createContext(EntityAction.DELETE);
         context.setEntity(old);
+        context.setOldEntity(old);
 
         // 带有事务的业务
         getTransactionTemplate().executeWithoutResult(status -> {
@@ -106,53 +150,11 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
         });
     }
 
-    private void doSave(P p, EntityContext<P, D> context) {
-        Long userId = authContext.getUserId();
-        context.setSave(true);
-
-        p.setCreateUser(userId);
-        p.setUpdateUser(userId);
-
-        businessCheck(context);
-
-        D entity = getConverter().toDo(p);
-        context.setEntity(entity);
-
-        preConsumer(context);
-        getMapper().insert(entity);
-        postConsumer(context);
-
-        SpringContext.publishEvent(new EntityEvent<>(this, context));
-    }
-
-    private void doUpdate(P p, EntityContext<P, D> context) {
-        Long userId = authContext.getUserId();
-        context.setUpdate(true);
-
-        D old = getMapper().selectById(p.getId());
-        context.setOldEntity(old);
-
-        if (old == null) {
-            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
-        }
-        p.setUpdateUser(userId);
-
-        businessCheck(context);
-
-        D entity = getConverter().toDo(p);
-        context.setEntity(entity);
-        preConsumer(context);
-        getMapper().updateById(entity);
-        postConsumer(context);
-
-        SpringContext.publishEvent(new EntityEvent<>(this, context));
-    }
-
     /**
      * 创建上下文
      */
-    protected EntityContext<P, D> createContext(String id) {
-        return new DefaultEntityContext<>(id);
+    protected DefaultEntityContext<P, D> createContext(EntityAction action) {
+        return new DefaultEntityContext<>(action);
     }
 
     /**
@@ -195,8 +197,10 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
      */
     private void doFinally(EntityContext<P, D> context) {
         StopWatch stopWatch = context.getStopWatch();
-        if (stopWatch != null && stopWatch.getTaskCount() > 0) {
-            log.debug("\n{}", stopWatch.prettyPrint());
+        if (stopWatch.getTotalTimeMillis() > 200) {
+            log.info(stopWatch.shortSummary());
+        } else {
+            log.info(stopWatch.prettyPrint());
         }
         context.clear();
     }

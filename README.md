@@ -3,9 +3,9 @@
 ## 一、技术选型
 
 - JDK：1.8
-- SpringBoot：[2.7.17](https://docs.spring.io/spring-boot/docs/2.7.17/reference/html/)
-- SpringCloud：[2021.0.8](https://docs.spring.io/spring-cloud/docs/2021.0.8/reference/html/)
-- MyBatisPlus：[3.5.3.1](https://baomidou.com/pages/24112f/)
+- SpringBoot：[2.7.18](https://docs.spring.io/spring-boot/docs/2.7.18/reference/html/)
+- SpringCloud：[2021.0.9](https://docs.spring.io/spring-cloud/docs/2021.0.9/reference/html/)
+- MyBatisPlus：[3.5.9](https://baomidou.com/introduce/)
 
 ## 三、Spring Boot CodeArtist
 
@@ -41,3 +41,7 @@ Spring Boot 框架的码匠实现
 > - 特性：新增消息列队组件
 > - 特性：新增Web项目组件
 > - 特性：新增组件示例项目
+
+### License
+
+MyBatis-Plus is under the Apache 2.0 license. See the Apache License 2.0 file for details.

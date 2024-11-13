@@ -22,13 +22,17 @@ public interface EntityChecker<P, D> {
 
     default void check(EntityContext<P, D> context) {
         StopWatch stopWatch = context.getStopWatch();
-        stopWatch.start(getClass().getSimpleName());
-        if (context.isSave()) {
-            checkSave(context);
-        } else if (context.isUpdate()) {
-            checkUpdate(context);
-        } else if (context.isDelete()) {
-            checkDelete(context);
+        stopWatch.start(getClass().getSimpleName() + " " + context.getAction().name());
+        switch (context.getAction()) {
+            case SAVE:
+                checkSave(context);
+                break;
+            case UPDATE:
+                checkUpdate(context);
+                break;
+            case DELETE:
+                checkDelete(context);
+                break;
         }
         stopWatch.stop();
     }

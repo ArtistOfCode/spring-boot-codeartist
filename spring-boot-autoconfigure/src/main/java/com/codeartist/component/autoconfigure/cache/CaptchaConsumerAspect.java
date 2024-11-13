@@ -3,7 +3,7 @@ package com.codeartist.component.autoconfigure.cache;
 import com.codeartist.component.cache.core.redis.RedisCache;
 import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
-import com.codeartist.component.core.entity.enums.GlobalConstants;
+import com.codeartist.component.core.entity.enums.GlobalRedisKey;
 import com.codeartist.component.core.exception.BusinessException;
 import com.codeartist.component.core.support.captcha.CaptchaParam;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -31,7 +31,7 @@ public class CaptchaConsumerAspect {
     public Object doAround(ProceedingJoinPoint joinPoint, CaptchaParam param) throws Throwable {
         SpringContext.validate(param);
 
-        String key = GlobalConstants.RedisKey.CAPTCHA_KEY + param.getKey();
+        String key = GlobalRedisKey.CAPTCHA_KEY + param.getKey();
         String errorCountKey = CAPTCHA_ERROR_COUNT_KEY + param.getKey();
 
         String actualCode = redisCache.get(key, String.class);

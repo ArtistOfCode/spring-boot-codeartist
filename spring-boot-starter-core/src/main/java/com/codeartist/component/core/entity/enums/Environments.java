@@ -23,16 +23,16 @@ public enum Environments {
     private final String profile;
     private final String name;
 
-    public boolean not() {
-        return !is();
+    public String getName() {
+        return SpringContext.getMessage(this.name);
     }
 
     public boolean is() {
         return SpringContext.acceptsProfiles(this.getProfile());
     }
 
-    public String getName() {
-        return SpringContext.getMessage(this.name);
+    public boolean not() {
+        return !is();
     }
 
     public interface ProfileConst {

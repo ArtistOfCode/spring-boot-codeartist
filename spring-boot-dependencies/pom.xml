@@ -21,8 +21,8 @@
         <spring-boot-codeartist.version>1.0.1-SNAPSHOT</spring-boot-codeartist.version>
         <!-- 第三方框架 -->
         <spring-boot.version>2.7.18</spring-boot.version>
-        <spring-cloud-dependencies.version>2021.0.9</spring-cloud-dependencies.version>
-        <mybatis-plus-boot-starter.version>3.5.7</mybatis-plus-boot-starter.version>
+        <spring-cloud.version>2021.0.9</spring-cloud.version>
+        <mybatis-plus.version>3.5.9</mybatis-plus.version>
         <!-- 第三方工具 -->
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
         <knife4j-springdoc-ui.version>3.0.3</knife4j-springdoc-ui.version>
@@ -79,6 +79,11 @@
             </dependency>
             <dependency>
                 <groupId>com.codeartist</groupId>
+                <artifactId>spring-boot-starter-wechat-pay</artifactId>
+                <version>${spring-boot-codeartist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.codeartist</groupId>
                 <artifactId>spring-boot-starter-generator</artifactId>
                 <version>${spring-boot-codeartist.version}</version>
                 <scope>test</scope>
@@ -87,21 +92,18 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud-dependencies.version}</version>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus-boot-starter.version}</version>
+                <artifactId>mybatis-plus-bom</artifactId>
+                <version>${mybatis-plus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <!-- 第三方工具 -->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis-plus-boot-starter.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
@@ -150,15 +152,6 @@
     <build>
         <!-- 资源插件 -->
         <resources>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/application*.yml</include>
-                    <include>**/application*.yaml</include>
-                    <include>**/application*.properties</include>
-                </includes>
-            </resource>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
                 <excludes>
