@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * 用户基本信息
  *
  * @author CodeGenerator
- * @since 2023-12-14
+ * @since 2024-11-19
  */
 @Getter
 @Setter

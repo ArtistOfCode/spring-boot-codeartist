@@ -3,7 +3,7 @@ package ${package.Entity}.param;
 <#list table.importPackages as pkg>
 import ${pkg};
 </#list>
-import com.codeartist.component.core.entity.PageParam;
+import com.codeartist.component.core.entity.param.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

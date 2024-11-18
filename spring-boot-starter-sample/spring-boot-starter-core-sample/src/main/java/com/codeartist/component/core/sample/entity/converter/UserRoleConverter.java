@@ -1,9 +1,9 @@
 package com.codeartist.component.core.sample.entity.converter;
 
-import com.codeartist.component.core.support.curd.BaseConverter;
 import com.codeartist.component.core.sample.entity.UserRole;
 import com.codeartist.component.core.sample.entity.param.UserRoleParam;
 import com.codeartist.component.core.sample.entity.vo.UserRoleVO;
+import com.codeartist.component.core.support.curd.BaseConverter;
 import org.mapstruct.Mapper;
 
 /**

@@ -1,7 +1,7 @@
 package com.codeartist.component.generator.sample.mapper;
 
-import com.codeartist.component.generator.sample.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.codeartist.component.generator.sample.entity.User;
 
 /**
  * <p>
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author CodeGenerator
- * @since 2023-12-14
+ * @since 2024-11-19
  */
 public interface UserMapper extends BaseMapper<User> {
 

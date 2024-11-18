@@ -23,25 +23,30 @@ Spring Boot 框架的码匠实现
 
 ### RELEASE
 
-> **1.0.1-SNAPSHOT**
-> - 特性：升级SpringBoot版本`2.7.17`
-> - 特性：升级SpringCloud版本`2021.0.8`
-> - 特性：升级MyBatisPlus版本`3.5.3.1`
-> - 特性：新增Spring脚手架
-> - 特性：拆分组件为独立项目
-> 
-> **1.0.0-SNAPSHOT**
-> - 特性：新增SpringBoot版本`2.2.0.RELEASE`
-> - 特性：新增SpringCloud版本`Hoxton.RELEASE`
-> - 特性：新增项目架构
-> - 特性：新增版本依赖
-> - 特性：新增自动配置组件
-> - 特性：新增核心组件
-> - 特性：新增缓存组件
-> - 特性：新增消息列队组件
-> - 特性：新增Web项目组件
-> - 特性：新增组件示例项目
+**1.0.1-SNAPSHOT**
+- 特性：升级SpringBoot版本`2.7.17`
+- 特性：升级SpringCloud版本`2021.0.8`
+- 特性：升级MyBatisPlus版本`3.5.3.1`
+- 特性：新增Spring脚手架
+- 特性：拆分组件为独立项目
+
+**1.0.0-SNAPSHOT**
+- 特性：新增SpringBoot版本`2.2.0.RELEASE`
+- 特性：新增SpringCloud版本`Hoxton.RELEASE`
+- 特性：新增项目架构
+- 特性：新增版本依赖
+- 特性：新增自动配置组件
+- 特性：新增核心组件
+- 特性：新增缓存组件
+- 特性：新增消息列队组件
+- 特性：新增Web项目组件
+- 特性：新增组件示例项目
+
+- 🎉 项目
+- ⭐️ 特征
+- 🐞 缺陷
+- 📔 文档
 
 ### License
 
-MyBatis-Plus is under the Apache 2.0 license. See the Apache License 2.0 file for details.
+Spring Boot CodeArtist is under the Apache 2.0 license. See the Apache License 2.0 file for details.

@@ -22,4 +22,16 @@ public class EntityEvent<T> extends PayloadApplicationEvent<T> {
         super(source, entityContext.getEntity());
         this.entityContext = entityContext;
     }
+
+    public boolean isSave() {
+        return EntityAction.SAVE == getEntityContext().getAction();
+    }
+
+    public boolean isUpdate() {
+        return EntityAction.UPDATE == getEntityContext().getAction();
+    }
+
+    public boolean isDelete() {
+        return EntityAction.DELETE == getEntityContext().getAction();
+    }
 }

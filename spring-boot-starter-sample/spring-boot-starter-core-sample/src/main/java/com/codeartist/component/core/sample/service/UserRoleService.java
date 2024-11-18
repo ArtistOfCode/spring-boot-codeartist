@@ -1,7 +1,7 @@
 package com.codeartist.component.core.sample.service;
 
 import com.codeartist.component.core.sample.entity.UserRole;
-import com.codeartist.component.core.support.curd.AbstrartRelationService;
+import com.codeartist.component.core.support.curd.AbstractRelationService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,9 +11,5 @@ import org.springframework.stereotype.Service;
  * @since 2023-06-29
  */
 @Service
-public class UserRoleService extends AbstrartRelationService<UserRole> {
-
-    protected UserRoleService() {
-        super(UserRole::getUserId, UserRole::getRoleId);
-    }
+public class UserRoleService extends AbstractRelationService<UserRole> {
 }

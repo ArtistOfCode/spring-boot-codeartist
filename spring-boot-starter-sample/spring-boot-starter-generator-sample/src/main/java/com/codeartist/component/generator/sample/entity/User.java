@@ -1,22 +1,25 @@
 package com.codeartist.component.generator.sample.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 /**
  * 用户基本信息
  *
  * @author CodeGenerator
- * @since 2023-12-14
+ * @since 2024-11-19
  */
 @Getter
 @Setter
 @TableName("t_user")
 public class User {
 
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**

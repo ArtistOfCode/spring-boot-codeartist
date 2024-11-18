@@ -1,16 +1,17 @@
 package com.codeartist.component.generator.sample.entity.param;
 
-import java.time.LocalDateTime;
 import com.codeartist.component.core.entity.param.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 /**
  * 用户基本信息
  *
  * @author CodeGenerator
- * @since 2023-12-14
+ * @since 2024-11-19
  */
 @Getter
 @Setter

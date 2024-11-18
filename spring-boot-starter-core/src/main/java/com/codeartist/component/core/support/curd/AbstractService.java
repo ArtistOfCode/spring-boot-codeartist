@@ -25,14 +25,13 @@ import org.springframework.util.StopWatch;
  * @author AiJiangnan
  * @date 2023/6/1
  */
+@Getter
 public abstract class AbstractService<D, R, P extends PageParam> implements BaseService<R, P> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Getter
     @Autowired
     private BaseMapper<D> mapper;
-    @Getter
     @Autowired
     private BaseConverter<D, P, R> converter;
     @Autowired
@@ -198,9 +197,9 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
     private void doFinally(EntityContext<P, D> context) {
         StopWatch stopWatch = context.getStopWatch();
         if (stopWatch.getTotalTimeMillis() > 200) {
-            log.info(stopWatch.shortSummary());
-        } else {
             log.info(stopWatch.prettyPrint());
+        } else {
+            log.info(stopWatch.shortSummary());
         }
         context.clear();
     }

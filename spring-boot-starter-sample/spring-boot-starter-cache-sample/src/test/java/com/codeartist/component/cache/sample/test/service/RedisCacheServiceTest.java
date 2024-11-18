@@ -23,6 +23,6 @@ class RedisCacheServiceTest extends AbstractSpringRunnerTests {
         redisCacheService.cache(stopWatch);
         redisCacheService.cache(stopWatch);
         redisCacheService.cache(stopWatch);
-        Assertions.assertEquals(stopWatch.getTaskCount(), 1);
+        Assertions.assertEquals(1, stopWatch.getTaskCount());
     }
 }

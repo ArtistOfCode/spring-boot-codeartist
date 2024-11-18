@@ -16,6 +16,8 @@ public interface BaseConverter<D, P, R> {
 
     D toDo(P param);
 
+    List<D> toDo(List<P> param);
+
     R toVo(D param);
 
     List<R> toVo(List<D> param);

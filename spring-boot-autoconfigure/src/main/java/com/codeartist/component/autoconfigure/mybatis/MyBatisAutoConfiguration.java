@@ -42,8 +42,6 @@ public class MyBatisAutoConfiguration {
 
     /**
      * 分布式ID生成器，默认实现，后续可以考虑单独封装ID生成器
-     * <p>
-     * TODO 重新优化
      */
     @Bean
     @ConditionalOnMissingBean

@@ -8,18 +8,4 @@
         <result column="user_id" property="userId"/>
         <result column="role_id" property="roleId"/>
     </resultMap>
-
-    <insert id="insertBatch">
-        insert into t_user_role
-        <if test="column">
-            (role_id, user_id)
-        </if>
-        <if test="!column">
-            (user_id, role_id)
-        </if>
-        values
-        <foreach item="e" collection="ids" separator=",">
-            (#{id}, #{e})
-        </foreach>
-    </insert>
 </mapper>

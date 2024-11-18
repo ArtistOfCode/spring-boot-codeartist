@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * 用户基本信息 服务实现类
  *
  * @author CodeGenerator
- * @since 2023-12-14
+ * @since 2024-11-19
  */
 @Service
 public class UserService extends AbstractService<User, UserVO, UserParam> {

@@ -2,11 +2,11 @@ package com.codeartist.component.core.web;
 
 import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.entity.ErrorResp;
-import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.entity.enums.ApiHttpStatus;
+import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.exception.BadRequestException;
-import com.codeartist.component.core.support.props.AppProperties;
 import com.codeartist.component.core.support.message.I18nMessageSource;
+import com.codeartist.component.core.support.props.AppProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -53,11 +53,6 @@ public class ClientExceptionHandler {
                 .status(ApiHttpStatus.CLIENT_WARNING.getValue())
                 .body(error);
     }
-
-//    @ExceptionHandler(BindException.class)
-//    public ResponseEntity<ErrorResp> bindException(BindException e) {
-//        return badRequestException(new BadRequestException(e));
-//    }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResp> badRequestException(BadRequestException e) {

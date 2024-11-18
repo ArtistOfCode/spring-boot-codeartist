@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
-import com.baomidou.mybatisplus.generator.query.SQLQuery;
 import com.codeartist.component.generator.entity.GenerateProperties;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.io.ClassPathResource;
@@ -43,8 +42,7 @@ public final class GenerateUtils {
         }
 
         FastAutoGenerator.create(new DataSourceConfig.Builder(properties.getUrl(), properties.getUsername(), properties.getPassword())
-                        .dbQuery(properties.getDbQuery())
-                        .databaseQueryClass(SQLQuery.class))
+                        .dbQuery(properties.getDbQuery()))
                 .globalConfig(builder -> builder
                         .author("CodeGenerator")
                         .disableOpenDir()
@@ -76,6 +74,7 @@ public final class GenerateUtils {
                         // .enableFileOverride()
                         // Service
                         .serviceBuilder()
+                        .disableService()
                         .serviceTemplate("tpl/serviceImpl.java")
                         .serviceImplTemplate("tpl/serviceImpl.java")
                         .formatServiceFileName("%sService")

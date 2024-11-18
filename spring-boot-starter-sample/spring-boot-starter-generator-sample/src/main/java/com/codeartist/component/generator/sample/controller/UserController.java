@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
  * 用户基本信息 控制器
  *
  * @author CodeGenerator
- * @since 2023-12-14
+ * @since 2024-11-19
  */
-@Tag(name = "UserController", description = "用户基本信息")
+@Tag(name = "用户基本信息")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController extends AbstractController<UserVO, UserParam> {
 
 }

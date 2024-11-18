@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
  * 用户基本信息 实体转换
  *
  * @author CodeGenerator
- * @since 2023-12-14
+ * @since 2024-11-19
  */
 @Mapper(componentModel = "spring")
 public interface UserConverter extends BaseConverter<User, UserParam, UserVO> {
