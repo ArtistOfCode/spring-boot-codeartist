@@ -1,6 +1,7 @@
 package com.codeartist.component.core.sample.controller;
 
 import com.codeartist.component.core.entity.Relation;
+import com.codeartist.component.core.sample.entity.UserRole;
 import com.codeartist.component.core.sample.entity.param.UserParam;
 import com.codeartist.component.core.sample.entity.vo.UserVO;
 import com.codeartist.component.core.sample.service.UserRoleService;
@@ -9,6 +10,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户基本信息 控制器
@@ -27,12 +31,18 @@ public class UserController extends AbstractController<UserVO, UserParam> {
     @GetMapping("/role")
     @Operation(summary = "查询关联信息")
     public Relation relation(Long id) {
-        return userRoleService.get(id);
+        return userRoleService.get(id, UserRole::getUserId);
     }
 
     @PostMapping("/role")
     @Operation(summary = "保存关联接口")
     public void relation(@RequestBody Relation param) {
-        userRoleService.save(param);
+        List<UserRole> userRoleList = param.getIds().stream().map(id -> {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(param.getId());
+            userRole.setRoleId(id);
+            return userRole;
+        }).collect(Collectors.toList());
+        userRoleService.save(userRoleList, UserRole::getUserId);
     }
 }

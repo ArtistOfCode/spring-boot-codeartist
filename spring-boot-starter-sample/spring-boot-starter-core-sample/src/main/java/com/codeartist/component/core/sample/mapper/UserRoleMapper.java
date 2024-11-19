@@ -1,6 +1,6 @@
 package com.codeartist.component.core.sample.mapper;
 
-import com.codeartist.component.core.support.curd.RelationMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.codeartist.component.core.sample.entity.UserRole;
 
 /**
@@ -11,5 +11,5 @@ import com.codeartist.component.core.sample.entity.UserRole;
  * @author CodeGenerator
  * @since 2023-06-29
  */
-public interface UserRoleMapper extends RelationMapper<UserRole> {
+public interface UserRoleMapper extends BaseMapper<UserRole> {
 }

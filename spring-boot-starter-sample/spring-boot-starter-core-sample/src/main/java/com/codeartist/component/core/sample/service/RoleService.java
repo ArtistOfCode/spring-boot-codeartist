@@ -1,9 +1,9 @@
 package com.codeartist.component.core.sample.service;
 
-import com.codeartist.component.core.support.curd.AbstractService;
 import com.codeartist.component.core.sample.entity.Role;
 import com.codeartist.component.core.sample.entity.param.RoleParam;
 import com.codeartist.component.core.sample.entity.vo.RoleVO;
+import com.codeartist.component.core.support.curd.AbstractService;
 import org.springframework.stereotype.Service;
 
 /**

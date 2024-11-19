@@ -2,6 +2,7 @@ package com.codeartist.component.core.entity;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.codeartist.component.core.support.curd.BaseConverter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,25 +14,21 @@ import java.util.function.Function;
  * 分页响应实体
  *
  * @param <R> 响应实体类型
- *
  * @author AiJiangnan
  * @date 2020/9/21
  */
 @Getter
 @Setter
+@Schema(description = "分页信息")
 public class PageInfo<R> {
 
-    /**
-     * 当前页码
-     */
+    @Schema(description = "当前页面")
     private int current;
-    /**
-     * 总记录数
-     */
+
+    @Schema(description = "记录总数")
     private int total;
-    /**
-     * 记录数据
-     */
+
+    @Schema(description = "记录数据")
     private List<R> records = Collections.emptyList();
 
     public PageInfo() {

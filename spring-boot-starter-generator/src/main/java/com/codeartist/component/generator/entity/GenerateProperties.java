@@ -1,6 +1,7 @@
 package com.codeartist.component.generator.entity;
 
 import com.baomidou.mybatisplus.generator.config.IDbQuery;
+import com.codeartist.component.generator.engine.EnhanceH2Query;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,5 +31,14 @@ public class GenerateProperties {
 
     public void setTablesPrefix(String... tablesPrefix) {
         this.tablesPrefix = tablesPrefix;
+    }
+
+    public static GenerateProperties h2() {
+        GenerateProperties prop = new GenerateProperties();
+        prop.setDbQuery(new EnhanceH2Query());
+        prop.setUrl("jdbc:h2:mem:default;MODE=MySQL;DATABASE_TO_LOWER=TRUE;INIT=RUNSCRIPT FROM 'classpath:sql/init.sql'");
+        prop.setUsername("sa");
+        prop.setPassword("");
+        return prop;
     }
 }
