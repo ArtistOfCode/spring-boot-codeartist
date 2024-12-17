@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
  * @date 2023-12-12
  */
 @Component
-public class UserChecker implements EntityChecker<UserParam, User> {
+public class UserChecker implements EntityChecker<UserParam, User, EntityContext<UserParam, User>> {
 
     @Override
-    public void checkSave(EntityContext<UserParam, User> context) {
-        EntityChecker.super.checkSave(context);
+    public void doAccept(EntityContext<UserParam, User> context) {
+
     }
 }

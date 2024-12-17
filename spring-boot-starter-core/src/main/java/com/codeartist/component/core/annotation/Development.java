@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Profile(Environments.ProfileConst.NOT_PROD_PROFILE)
+@Profile(Environments.Profiles.NOT_PROD)
 public @interface Development {
 }

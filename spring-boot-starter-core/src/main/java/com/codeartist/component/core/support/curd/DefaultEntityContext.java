@@ -1,8 +1,8 @@
 package com.codeartist.component.core.support.curd;
 
+import com.codeartist.component.core.support.business.DefaultContext;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.StopWatch;
 
 /**
  * 实体操作上下文默认实现
@@ -12,21 +12,20 @@ import org.springframework.util.StopWatch;
  */
 @Getter
 @Setter
-public class DefaultEntityContext<P, D> implements EntityContext<P, D> {
+public class DefaultEntityContext<P, D> extends DefaultContext<P, D> implements EntityContext<P, D> {
 
     private EntityAction action;
-    private P param;
     private D entity;
     private D oldEntity;
-    private StopWatch stopWatch;
 
     public DefaultEntityContext(EntityAction action) {
-        this.stopWatch = new StopWatch(action.name());
+        super(action);
+        this.action = action;
     }
 
     @Override
     public void clear() {
-        setParam(null);
+        super.clear();
         setEntity(null);
         setOldEntity(null);
     }

@@ -19,6 +19,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.StopWatch;
 
+import java.util.Arrays;
+
 /**
  * 抽象服务类
  *
@@ -37,9 +39,11 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
     @Autowired
     private AuthContext authContext;
     @Autowired
-    private ObjectProvider<EntityChecker<P, D>> entityCheckers;
+    private ObjectProvider<EntityChecker<P, D, EntityContext<P, D>>> entityCheckers;
     @Autowired
-    private ObjectProvider<EntityConsumer<P, D>> entityContextConsumers;
+    private ObjectProvider<PreEntityConsumer<P, D, EntityContext<P, D>>> preEntityConsumers;
+    @Autowired
+    private ObjectProvider<PostEntityConsumer<P, D, EntityContext<P, D>>> postEntityConsumers;
     @Autowired
     private ObjectProvider<TransactionTemplate> transactionTemplate;
 
@@ -174,21 +178,34 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
      * 业务校验
      */
     private void businessCheck(EntityContext<P, D> context) {
-        entityCheckers.stream().forEach(checker -> checker.check(context));
+        entityCheckers.stream()
+                .filter(consumer -> filterAction(consumer, context))
+                .forEach(checker -> checker.accept(context));
     }
 
     /**
      * 执行前置处理
      */
     private void preConsumer(EntityContext<P, D> context) {
-        entityContextConsumers.stream().forEach(consumer -> consumer.preConsumer(context));
+        preEntityConsumers.stream()
+                .filter(consumer -> filterAction(consumer, context))
+                .forEach(consumer -> consumer.accept(context));
     }
 
     /**
      * 执行后置处理
      */
     private void postConsumer(EntityContext<P, D> context) {
-        entityContextConsumers.stream().forEach(consumer -> consumer.postConsumer(context));
+        postEntityConsumers.stream()
+                .filter(consumer -> filterAction(consumer, context))
+                .forEach(consumer -> consumer.accept(context));
+    }
+
+    /**
+     * 过滤Action处理
+     */
+    private boolean filterAction(EntityConsumer<P, D, EntityContext<P, D>> consumer, EntityContext<P, D> context) {
+        return Arrays.stream(consumer.getAction()).anyMatch(action -> action == context.getAction());
     }
 
     /**

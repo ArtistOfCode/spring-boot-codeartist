@@ -44,6 +44,7 @@ public abstract class AbstractRelationService<D> implements RelationService<D> {
         if (CollectionUtils.isEmpty(param)) {
             return;
         }
+
         Long id = field.apply(param.get(0));
 
         getTransactionTemplate().executeWithoutResult(status -> {

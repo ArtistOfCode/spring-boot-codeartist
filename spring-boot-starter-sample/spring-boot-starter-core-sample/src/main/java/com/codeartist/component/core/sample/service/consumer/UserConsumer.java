@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class UserConsumer implements EntityConsumer<UserParam, User> {
+public class UserConsumer implements EntityConsumer<UserParam, User, EntityContext<UserParam, User>> {
 
     @Override
-    public void preSave(EntityContext<UserParam, User> context) {
-        log.info(context.toString());
+    public void doAccept(EntityContext<UserParam, User> context) {
+
     }
 }

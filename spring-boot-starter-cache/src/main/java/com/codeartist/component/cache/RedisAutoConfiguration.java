@@ -1,6 +1,5 @@
 package com.codeartist.component.cache;
 
-import com.codeartist.component.cache.autoconfigure.MultiRedisRegister;
 import com.codeartist.component.cache.autoconfigure.RedisLettuceConnectionFactory;
 import com.codeartist.component.cache.bean.CacheProperties;
 import com.codeartist.component.cache.core.Cache;
@@ -11,7 +10,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Role;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,14 +23,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * @date 2023-11-16
  */
 @Configuration(proxyBeanMethods = false)
-@Import({MultiRedisRegister.class,})
 @ConditionalOnClass(RedisTemplate.class)
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class RedisAutoConfiguration {
 
     @Bean
     @Primary
-    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     LettuceConnectionFactory lettuceConnectionFactory(RedisProperties properties, ClientResources clientResources) {
         return new RedisLettuceConnectionFactory(properties, clientResources).buildStandaloneConnectionFactory();
     }

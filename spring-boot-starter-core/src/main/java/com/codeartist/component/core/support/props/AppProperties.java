@@ -15,4 +15,5 @@ public class AppProperties {
 
     private String name;
     private String rootPackage;
+    private String modulePackage;
 }

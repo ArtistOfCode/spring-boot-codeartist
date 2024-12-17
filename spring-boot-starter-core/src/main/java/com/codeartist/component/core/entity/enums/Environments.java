@@ -13,10 +13,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Environments {
 
-    JUNIT(ProfileConst.JUNIT_PROFILE, "global.environment.junit"),
-    LOCAL(ProfileConst.LOCAL_PROFILE, "global.environment.local"),
-    TEST(ProfileConst.TEST_PROFILE, "global.environment.test"),
-    PROD(ProfileConst.PROD_PROFILE, "global.environment.prod"),
+    JUNIT(Profiles.JUNIT, "global.environment.junit"),
+    LOCAL(Profiles.LOCAL, "global.environment.local"),
+    TEST(Profiles.TEST, "global.environment.test"),
+    PROD(Profiles.PROD, "global.environment.prod"),
     ;
 
     @Getter
@@ -35,12 +35,12 @@ public enum Environments {
         return !is();
     }
 
-    public interface ProfileConst {
+    public interface Profiles {
 
-        String JUNIT_PROFILE = "junit";
-        String LOCAL_PROFILE = "local";
-        String TEST_PROFILE = "test";
-        String PROD_PROFILE = "prod";
-        String NOT_PROD_PROFILE = "!prod";
+        String JUNIT = "junit";
+        String LOCAL = "local";
+        String TEST = "test";
+        String PROD = "prod";
+        String NOT_PROD = "!prod";
     }
 }

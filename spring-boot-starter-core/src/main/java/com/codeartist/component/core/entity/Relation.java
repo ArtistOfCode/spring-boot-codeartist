@@ -8,7 +8,11 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * 表关联参数
@@ -31,4 +35,11 @@ public class Relation {
     @NotEmpty
     @Schema(description = "1:N中的多个数据的ID")
     private Set<Long> ids;
+
+    public <D> List<D> map(BiFunction<Long, Long, D> func) {
+        if (this.ids == null || this.ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return this.ids.stream().map(nid -> func.apply(this.id, nid)).collect(Collectors.toList());
+    }
 }

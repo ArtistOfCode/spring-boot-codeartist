@@ -1,5 +1,9 @@
 package com.codeartist.component.core.support.auth;
 
+import com.codeartist.component.core.entity.Principal;
+
+import java.util.Objects;
+
 /**
  * 权限上下文
  *
@@ -8,7 +12,15 @@ package com.codeartist.component.core.support.auth;
  */
 public interface AuthContext {
 
-    Long getRequiredUserId();
-
     Long getUserId();
+
+    Principal getPrincipal();
+
+    default Long getRequiredUserId() {
+        return Objects.requireNonNull(getUserId(), "UserId is null");
+    }
+
+    default Principal getRequiredPrincipal() {
+        return Objects.requireNonNull(getPrincipal(), "Principal is null");
+    }
 }

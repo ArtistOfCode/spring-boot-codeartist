@@ -1,5 +1,6 @@
 package com.codeartist.component.core.sample.controller;
 
+import com.codeartist.component.core.entity.Principal;
 import com.codeartist.component.core.entity.Relation;
 import com.codeartist.component.core.sample.entity.UserRole;
 import com.codeartist.component.core.sample.entity.param.UserParam;
@@ -11,8 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户基本信息 控制器
@@ -37,12 +37,14 @@ public class UserController extends AbstractController<UserVO, UserParam> {
     @PostMapping("/role")
     @Operation(summary = "保存关联接口")
     public void relation(@RequestBody Relation param) {
-        List<UserRole> userRoleList = param.getIds().stream().map(id -> {
-            UserRole userRole = new UserRole();
-            userRole.setUserId(param.getId());
-            userRole.setRoleId(id);
-            return userRole;
-        }).collect(Collectors.toList());
-        userRoleService.save(userRoleList, UserRole::getUserId);
+        userRoleService.save(param.map(UserRole::new), UserRole::getUserId);
+    }
+
+    @PostMapping("login")
+    public void login(@RequestBody UserParam param, HttpServletRequest request) {
+        Principal principal = new Principal();
+        principal.setName(param.getName());
+        principal.setUsername(param.getUsername());
+        request.getSession().setAttribute(Principal.class.getName(), principal);
     }
 }

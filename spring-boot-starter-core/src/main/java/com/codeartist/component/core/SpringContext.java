@@ -6,6 +6,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.lang.NonNull;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.CollectionUtils;
@@ -142,11 +143,11 @@ public final class SpringContext implements EnvironmentAware, ApplicationContext
     }
 
     public static String getMessage(String code, Object[] args) {
-        return applicationContext.getMessage(code, args, getDefaultLocale());
+        return applicationContext.getMessage(code, args, code, getDefaultLocale());
     }
 
     public static String getMessage(String code) {
-        return applicationContext.getMessage(code, new Object[0], getDefaultLocale());
+        return applicationContext.getMessage(code, new Object[0], code, getDefaultLocale());
     }
 
     public static String getMessage(MessageSourceResolvable resolvable) {
@@ -212,12 +213,12 @@ public final class SpringContext implements EnvironmentAware, ApplicationContext
     }
 
     @Override
-    public void setEnvironment(Environment environment) {
+    public void setEnvironment(@NonNull Environment environment) {
         SpringContext.environment = environment;
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
         SpringContext.applicationContext = applicationContext;
     }
 }

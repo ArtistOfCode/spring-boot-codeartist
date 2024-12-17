@@ -1,14 +1,18 @@
 package com.codeartist.component.autoconfigure.web;
 
 import com.codeartist.component.autoconfigure.swagger.SwaggerAutoConfiguration;
+import com.codeartist.component.core.support.auth.ApiRouteProperties;
+import com.codeartist.component.core.support.auth.AuthHandlerInterceptor;
 import com.codeartist.component.core.web.ClientExceptionHandler;
 import com.codeartist.component.core.web.ServerExceptionHandler;
+import com.codeartist.component.core.web.WebMvcConfiguration;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,6 +27,7 @@ import java.time.format.DateTimeFormatter;
  * @date 2023-11-12
  */
 @Configuration(proxyBeanMethods = false)
+@EnableConfigurationProperties(ApiRouteProperties.class)
 @Import(SwaggerAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class WebMvcAutoConfiguration {
@@ -35,6 +40,16 @@ public class WebMvcAutoConfiguration {
     @Bean
     public ClientExceptionHandler clientExceptionHandler() {
         return new ClientExceptionHandler();
+    }
+
+    @Bean
+    public AuthHandlerInterceptor authHandlerInterceptor() {
+        return new AuthHandlerInterceptor();
+    }
+
+    @Bean
+    public WebMvcConfiguration webMvcConfiguration() {
+        return new WebMvcConfiguration();
     }
 
     /**

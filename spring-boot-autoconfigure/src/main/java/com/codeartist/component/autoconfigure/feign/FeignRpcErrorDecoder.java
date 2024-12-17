@@ -1,7 +1,6 @@
 package com.codeartist.component.autoconfigure.feign;
 
 import com.codeartist.component.core.entity.ErrorResp;
-import com.codeartist.component.core.entity.enums.ApiHttpStatus;
 import com.codeartist.component.core.exception.FeignException;
 import com.codeartist.component.core.util.JSON;
 import feign.Response;
@@ -29,16 +28,13 @@ public class FeignRpcErrorDecoder extends ErrorDecoder.Default {
      */
     @Override
     public Exception decode(String methodKey, Response response) {
-        if (ApiHttpStatus.isWarning(response.status()) || ApiHttpStatus.isError(response.status())) {
-            try {
-                byte[] body = StreamUtils.copyToByteArray(response.body().asInputStream());
-                ErrorResp errorResp = JSON.parseObject(body, ErrorResp.class);
-                return new FeignException(methodKey, errorResp);
-            } catch (IOException e) {
-                log.error("Feign exception convert error.", e);
-                return super.decode(methodKey, response);
-            }
+        try {
+            byte[] body = StreamUtils.copyToByteArray(response.body().asInputStream());
+            ErrorResp errorResp = JSON.parseObject(body, ErrorResp.class);
+            return new FeignException(methodKey, errorResp);
+        } catch (IOException e) {
+            log.error("Feign exception convert error.", e);
+            return super.decode(methodKey, response);
         }
-        return super.decode(methodKey, response);
     }
 }

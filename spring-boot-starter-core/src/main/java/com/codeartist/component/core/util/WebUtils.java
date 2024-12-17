@@ -52,6 +52,11 @@ public final class WebUtils {
                 .orElseThrow(() -> new IllegalStateException("Request info error."));
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T getSession(String name) {
+        return (T) getRequest().getSession().getAttribute(name);
+    }
+
     public static HttpServletResponse getResponse() {
         return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
                 .map(att -> (ServletRequestAttributes) att)

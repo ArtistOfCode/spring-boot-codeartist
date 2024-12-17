@@ -16,7 +16,6 @@ public class FeignException extends RuntimeException {
     private final ErrorResp errorResp;
 
     public FeignException(String methodKey, ErrorResp errorResp) {
-        super(errorResp.getCode());
         this.methodKey = methodKey;
         this.errorResp = errorResp;
     }

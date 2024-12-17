@@ -23,4 +23,12 @@ public class UserRoleParam extends PageParam {
 
     @Schema(description = "真实姓名")
     private Long roleId;
+
+    public UserRoleParam() {
+    }
+
+    public UserRoleParam(Long userId, Long roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }
