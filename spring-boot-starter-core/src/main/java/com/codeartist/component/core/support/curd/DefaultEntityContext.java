@@ -24,8 +24,8 @@ public class DefaultEntityContext<P, D> extends DefaultContext<P, D> implements 
     }
 
     @Override
-    public void clear() {
-        super.clear();
+    public void close() {
+        super.close();
         setEntity(null);
         setOldEntity(null);
     }

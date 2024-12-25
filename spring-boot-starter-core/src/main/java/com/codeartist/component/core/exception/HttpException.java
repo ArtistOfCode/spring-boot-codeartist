@@ -7,7 +7,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 
 /**
- * 国际化文案异常
+ * HTTP接口异常
  *
  * @author AiJiangnan
  * @date 2024/5/20

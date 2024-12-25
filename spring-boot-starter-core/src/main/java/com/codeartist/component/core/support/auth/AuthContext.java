@@ -5,7 +5,7 @@ import com.codeartist.component.core.entity.Principal;
 import java.util.Objects;
 
 /**
- * 权限上下文
+ * 权限上下文接口
  *
  * @author AiJiangnan
  * @date 2023-11-12

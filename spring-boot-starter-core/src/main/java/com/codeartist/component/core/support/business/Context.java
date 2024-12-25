@@ -18,5 +18,5 @@ public interface Context<P, R> {
 
     R getResult();
 
-    void clear();
+    void close();
 }

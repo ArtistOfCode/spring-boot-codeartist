@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "spring.api.auth")
+@ConfigurationProperties(prefix = "spring.api.router")
 public class ApiRouteProperties {
 
     private List<ApiRoute> routes;

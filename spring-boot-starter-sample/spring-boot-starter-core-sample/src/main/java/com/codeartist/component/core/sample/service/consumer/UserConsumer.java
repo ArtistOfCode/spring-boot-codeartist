@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class UserConsumer implements EntityConsumer<UserParam, User, EntityContext<UserParam, User>> {
+public class UserConsumer implements EntityConsumer<UserParam, User> {
 
     @Override
     public void doAccept(EntityContext<UserParam, User> context) {

@@ -2,6 +2,9 @@ package com.codeartist.component.core.entity.enums;
 
 /**
  * 正则表达式
+ *
+ * @author AiJiangnan
+ * @date 2024/11/13
  */
 public interface RegexExpression {
 

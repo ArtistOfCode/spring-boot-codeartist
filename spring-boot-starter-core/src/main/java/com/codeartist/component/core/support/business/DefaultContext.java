@@ -32,7 +32,7 @@ public class DefaultContext<P, R> implements Context<P, R> {
     }
 
     @Override
-    public void clear() {
+    public void close() {
         setParam(null);
     }
 }

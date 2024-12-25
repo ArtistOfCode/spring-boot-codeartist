@@ -2,7 +2,8 @@ package com.codeartist.component.core.support.auth;
 
 import com.codeartist.component.core.entity.Principal;
 import com.codeartist.component.core.util.WebUtils;
-import org.apache.commons.lang3.StringUtils;
+
+import java.util.Optional;
 
 /**
  * 默认权限上下文实现
@@ -13,11 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 public class DefaultAuthContext implements AuthContext {
 
     public Long getUserId() {
-        String userId = WebUtils.getRequestHeader("UserId");
-        if (StringUtils.isBlank(userId)) {
-            return null;
-        }
-        return Long.valueOf(userId);
+        return Optional.ofNullable(getPrincipal()).map(Principal::getId).orElse(null);
     }
 
     @Override

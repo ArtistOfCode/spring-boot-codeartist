@@ -8,5 +8,5 @@ package com.codeartist.component.core.support.curd;
  * @date 2024/11/13
  */
 public enum EntityAction {
-    SAVE, UPDATE, DELETE
+    QUERY, SAVE, UPDATE, DELETE
 }

@@ -29,7 +29,7 @@ Spring Boot 框架的码匠实现
 > - 特性：升级MyBatisPlus版本`3.5.3.1`
 > - 特性：新增Spring脚手架
 > - 特性：拆分组件为独立项目
-> 
+>
 > **1.0.0-SNAPSHOT**
 > - 特性：新增SpringBoot版本`2.2.0.RELEASE`
 > - 特性：新增SpringCloud版本`Hoxton.RELEASE`

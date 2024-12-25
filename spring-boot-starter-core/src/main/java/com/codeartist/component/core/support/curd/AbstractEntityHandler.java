@@ -8,66 +8,73 @@ import com.codeartist.component.core.support.curd.EntityConsumer.EntityChecker;
 import com.codeartist.component.core.support.curd.EntityConsumer.PostEntityConsumer;
 import com.codeartist.component.core.support.curd.EntityConsumer.PreEntityConsumer;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
- * 业务处理器抽象实现，整个生命周期接口
+ * 数据库实体处理器抽象实现，整个生命周期接口
  *
+ * @param <P> 参数实体
+ * @param <D> 数据库实体
  * @author AiJiangnan
  * @date 2023/6/1
  */
 @Getter
-@Setter
-@RequiredArgsConstructor
-public abstract class AbstractEntityHandler<P extends PageParam, D, C extends DefaultEntityContext<P, D>>
-        extends AbstractHandler<P, D, C> {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
+public abstract class AbstractEntityHandler<P extends PageParam, D> extends AbstractHandler<P, D, EntityContext<P, D>> {
 
     private final EntityAction action;
+    private final Logger logger;
     private final BaseConverter<D, P, ?> converter;
     private final AuthContext authContext;
-    private final ObjectProvider<EntityChecker<P, D, EntityContext<P, D>>> entityCheckers;
-    private final ObjectProvider<PreEntityConsumer<P, D, EntityContext<P, D>>> preEntityConsumers;
-    private final ObjectProvider<PostEntityConsumer<P, D, EntityContext<P, D>>> postEntityConsumers;
+    private final ObjectProvider<EntityChecker<P, D>> entityCheckers;
+    private final ObjectProvider<PreEntityConsumer<P, D>> preEntityConsumers;
+    private final ObjectProvider<PostEntityConsumer<P, D>> postEntityConsumers;
 
-    @SuppressWarnings("unchecked")
+    public AbstractEntityHandler(EntityAction action, AbstractService<D, ?, P> abstractService) {
+        this.action = action;
+        this.logger = abstractService.getLogger();
+        this.converter = abstractService.getConverter();
+        this.authContext = abstractService.getAuthContext();
+        this.entityCheckers = abstractService.getEntityCheckers();
+        this.preEntityConsumers = abstractService.getPreEntityConsumers();
+        this.postEntityConsumers = abstractService.getPostEntityConsumers();
+    }
+
     @Override
-    public C createContext(P param) {
+    public EntityContext<P, D> createContext(P param) {
         DefaultEntityContext<P, D> context = new DefaultEntityContext<>(getAction());
         context.setParam(param);
 
         Long userId = authContext.getUserId();
-        param.setCreateUser(userId);
+
+        if (context.getAction() == EntityAction.SAVE) {
+            param.setCreateUser(userId);
+        }
         param.setUpdateUser(userId);
 
         D entity = getConverter().toDo(param);
         context.setEntity(entity);
 
-        return (C) context;
+        return context;
     }
 
     @Override
-    public void businessCheck(C context) {
+    public void businessCheck(EntityContext<P, D> context) {
         super.acceptConsumer(getEntityCheckers(), context);
     }
 
     @Override
-    public void preConsumer(C context) {
+    public void preConsumer(EntityContext<P, D> context) {
         super.acceptConsumer(getPreEntityConsumers(), context);
     }
 
     @Override
-    public void postConsumer(C context) {
+    public void postConsumer(EntityContext<P, D> context) {
         super.acceptConsumer(getPostEntityConsumers(), context);
     }
 
     @Override
-    public void publishEvent(C context) {
+    public void publishEvent(EntityContext<P, D> context) {
         SpringContext.publishEvent(new EntityEvent<>(this, context));
     }
 }

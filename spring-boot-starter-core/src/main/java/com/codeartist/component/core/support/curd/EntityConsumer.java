@@ -9,7 +9,7 @@ import com.codeartist.component.core.support.business.BizConsumer;
  * @date 2023-12-09
  */
 @FunctionalInterface
-public interface EntityConsumer<P, D, C extends EntityContext<P, D>> extends BizConsumer<P, D, C> {
+public interface EntityConsumer<P, D> extends BizConsumer<P, D, EntityContext<P, D>> {
 
     /**
      * 获取可操作类型
@@ -22,18 +22,18 @@ public interface EntityConsumer<P, D, C extends EntityContext<P, D>> extends Biz
     /**
      * 业务检查接口
      */
-    interface EntityChecker<P, D, C extends EntityContext<P, D>> extends BizChecker<P, D, C>, EntityConsumer<P, D, C> {
+    interface EntityChecker<P, D> extends BizChecker<P, D, EntityContext<P, D>>, EntityConsumer<P, D> {
     }
 
     /**
      * 前置处理接口
      */
-    interface PreEntityConsumer<P, D, C extends EntityContext<P, D>> extends PreConsumer<P, D, C>, EntityConsumer<P, D, C> {
+    interface PreEntityConsumer<P, D> extends PreConsumer<P, D, EntityContext<P, D>>, EntityConsumer<P, D> {
     }
 
     /**
      * 后置处理接口
      */
-    interface PostEntityConsumer<P, D, C extends EntityContext<P, D>> extends PostConsumer<P, D, C>, EntityConsumer<P, D, C> {
+    interface PostEntityConsumer<P, D> extends PostConsumer<P, D, EntityContext<P, D>>, EntityConsumer<P, D> {
     }
 }

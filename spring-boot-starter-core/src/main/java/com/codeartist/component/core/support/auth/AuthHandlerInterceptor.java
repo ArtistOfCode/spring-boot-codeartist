@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 权限验证拦截器
+ *
  * @author AiJiangnan
  * @date 2024/12/18
  */

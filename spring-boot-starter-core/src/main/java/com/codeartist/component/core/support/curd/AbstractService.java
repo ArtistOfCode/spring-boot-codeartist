@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.entity.PageInfo;
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.entity.param.PageParam;
@@ -18,10 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
-import org.springframework.util.StopWatch;
-
-import java.util.Arrays;
 
 /**
  * 抽象服务类
@@ -32,7 +27,7 @@ import java.util.Arrays;
 @Getter
 public abstract class AbstractService<D, R, P extends PageParam> implements BaseService<R, P> {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private BaseMapper<D> mapper;
@@ -41,15 +36,14 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
     @Autowired
     private AuthContext authContext;
     @Autowired
-    private ObjectProvider<EntityChecker<P, D, EntityContext<P, D>>> entityCheckers;
+    private ObjectProvider<EntityChecker<P, D>> entityCheckers;
     @Autowired
-    private ObjectProvider<PreEntityConsumer<P, D, EntityContext<P, D>>> preEntityConsumers;
+    private ObjectProvider<PreEntityConsumer<P, D>> preEntityConsumers;
     @Autowired
-    private ObjectProvider<PostEntityConsumer<P, D, EntityContext<P, D>>> postEntityConsumers;
+    private ObjectProvider<PostEntityConsumer<P, D>> postEntityConsumers;
 
     @Override
     public R get(Long id) {
-        Assert.notNull(id, "ID不能为空");
         D entity = getMapper().selectById(id);
         return getConverter().toVo(entity);
     }
@@ -67,151 +61,91 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
 
     @Override
     public void save(P param) {
-//        new AbstractEntityHandler<P, D, DefaultEntityContext<P, D>>(EntityAction.SAVE, converter, authContext,
-//                entityCheckers, preEntityConsumers, postEntityConsumers) {
-//            @Override
-//            public void execute(DefaultEntityContext<P, D> context) {
-//                getMapper().insert(context.getEntity());
-//            }
-//        }.apply(param);
-
-        basicCheck(param);
-
-        DefaultEntityContext<P, D> context = createContext(EntityAction.SAVE);
-        context.setParam(param);
-
-        Long userId = authContext.getUserId();
-        param.setCreateUser(userId);
-        param.setUpdateUser(userId);
-
-        businessCheck(context);
-
-        D entity = getConverter().toDo(param);
-        context.setEntity(entity);
-
-        preConsumer(context);
-        getMapper().insert(entity);
-        postConsumer(context);
-
-        SpringContext.publishEvent(new EntityEvent<>(this, context));
-        doFinally(context);
+        new SaveEntityHandler().apply(param);
     }
 
     @Override
     public void update(P param) {
-        if (param.getId() == null) {
-            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
-        }
-
-        basicCheck(param);
-
-        DefaultEntityContext<P, D> context = createContext(EntityAction.UPDATE);
-        context.setParam(param);
-
-        // 带有事务的业务
-        Long userId = authContext.getUserId();
-
-        D old = getMapper().selectById(param.getId());
-        context.setOldEntity(old);
-
-        if (old == null) {
-            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
-        }
-        param.setUpdateUser(userId);
-
-        businessCheck(context);
-
-        D entity = getConverter().toDo(param);
-        context.setEntity(entity);
-        preConsumer(context);
-        getMapper().updateById(entity);
-        postConsumer(context);
-
-        SpringContext.publishEvent(new EntityEvent<>(this, context));
-        doFinally(context);
+        new UpdateEntityHandler().apply(param);
     }
 
     @Override
     public void delete(Long id) {
-        D old = getMapper().selectById(id);
-        if (old == null) {
-            return;
+        new DeleteEntityHandler(id).apply(null);
+    }
+
+    private class SaveEntityHandler extends AbstractEntityHandler<P, D> {
+
+        public SaveEntityHandler() {
+            super(EntityAction.SAVE, AbstractService.this);
         }
 
-        DefaultEntityContext<P, D> context = createContext(EntityAction.DELETE);
-        context.setEntity(old);
-        context.setOldEntity(old);
-
-        // 带有事务的业务
-        businessCheck(context);
-
-        preConsumer(context);
-        getMapper().deleteById(id);
-        postConsumer(context);
-
-        SpringContext.publishEvent(new EntityEvent<>(this, context));
-
-        doFinally(context);
-    }
-
-    /**
-     * 创建上下文
-     */
-    protected DefaultEntityContext<P, D> createContext(EntityAction action) {
-        return new DefaultEntityContext<>(action);
-    }
-
-    /**
-     * 参数基础校验
-     */
-    protected void basicCheck(P param) {
-        SpringContext.validate(param);
-    }
-
-    /**
-     * 业务校验
-     */
-    private void businessCheck(EntityContext<P, D> context) {
-        entityCheckers.stream()
-                .filter(consumer -> filterAction(consumer, context))
-                .forEach(checker -> checker.accept(context));
-    }
-
-    /**
-     * 执行前置处理
-     */
-    private void preConsumer(EntityContext<P, D> context) {
-        preEntityConsumers.stream()
-                .filter(consumer -> filterAction(consumer, context))
-                .forEach(consumer -> consumer.accept(context));
-    }
-
-    /**
-     * 执行后置处理
-     */
-    private void postConsumer(EntityContext<P, D> context) {
-        postEntityConsumers.stream()
-                .filter(consumer -> filterAction(consumer, context))
-                .forEach(consumer -> consumer.accept(context));
-    }
-
-    /**
-     * 过滤Action处理
-     */
-    private boolean filterAction(EntityConsumer<P, D, EntityContext<P, D>> consumer, EntityContext<P, D> context) {
-        return Arrays.stream(consumer.getAction()).anyMatch(action -> action == context.getAction());
-    }
-
-    /**
-     * 执行最终处理
-     */
-    private void doFinally(EntityContext<P, D> context) {
-        StopWatch stopWatch = context.getStopWatch();
-        if (stopWatch.getTotalTimeMillis() > 200) {
-            log.info(stopWatch.prettyPrint());
-        } else {
-            log.info(stopWatch.shortSummary());
+        @Override
+        public void execute(EntityContext<P, D> context) {
+            getMapper().insert(context.getEntity());
         }
-        context.clear();
+    }
+
+    private class UpdateEntityHandler extends AbstractEntityHandler<P, D> {
+
+        public UpdateEntityHandler() {
+            super(EntityAction.UPDATE, AbstractService.this);
+        }
+
+        @Override
+        public void basicCheck(P param) {
+            if (param.getId() == null) {
+                throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+            }
+            super.basicCheck(param);
+        }
+
+        @Override
+        public EntityContext<P, D> createContext(P param) {
+            DefaultEntityContext<P, D> context = (DefaultEntityContext<P, D>) super.createContext(param);
+            D old = getMapper().selectById(param.getId());
+            context.setOldEntity(old);
+            if (old == null) {
+                throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+            }
+            return context;
+        }
+
+        @Override
+        public void execute(EntityContext<P, D> context) {
+            getMapper().updateById(context.getEntity());
+        }
+    }
+
+    private class DeleteEntityHandler extends AbstractEntityHandler<P, D> {
+
+        private final Long id;
+
+        public DeleteEntityHandler(Long id) {
+            super(EntityAction.DELETE, AbstractService.this);
+            this.id = id;
+        }
+
+        @Override
+        public void basicCheck(P param) {
+        }
+
+        @Override
+        public EntityContext<P, D> createContext(P param) {
+            D old = getMapper().selectById(id);
+            if (old == null) {
+                throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+            }
+
+            DefaultEntityContext<P, D> context = (DefaultEntityContext<P, D>) super.createContext(param);
+            context.setEntity(old);
+            context.setOldEntity(old);
+            return context;
+        }
+
+        @Override
+        public void execute(EntityContext<P, D> context) {
+            getMapper().deleteById(id);
+        }
     }
 }

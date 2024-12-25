@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 分布式锁
+ * 分布式锁，只支持Redis缓存实现
  *
  * @author AiJiangnan
  * @date 2019/5/6

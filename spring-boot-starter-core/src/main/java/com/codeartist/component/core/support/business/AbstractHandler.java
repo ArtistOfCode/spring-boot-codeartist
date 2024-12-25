@@ -17,14 +17,17 @@ import java.util.Arrays;
 /**
  * 业务处理器抽象实现，整个生命周期接口
  *
+ * @param <P> 业务处理参数
+ * @param <R> 业务处理返回值
+ * @param <C> 业务处理上下文
  * @author AiJiangnan
  * @date 2023/6/1
  */
 @Getter
 @Setter
-public abstract class AbstractHandler<P, R, C extends DefaultContext<P, R>> implements BizHandler<P, R, C> {
+public abstract class AbstractHandler<P, R, C extends Context<P, R>> implements BizHandler<P, R, C> {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ObjectProvider<BizChecker<P, R, C>> bizCheckers;
@@ -36,9 +39,7 @@ public abstract class AbstractHandler<P, R, C extends DefaultContext<P, R>> impl
     @SuppressWarnings("unchecked")
     @Override
     public C createContext(P param) {
-        C c = (C) new DefaultContext<P, R>();
-        c.setParam(param);
-        return c;
+        return (C) new DefaultContext<P, R>();
     }
 
     @Override
@@ -70,11 +71,11 @@ public abstract class AbstractHandler<P, R, C extends DefaultContext<P, R>> impl
     public void close(C context) {
         StopWatch stopWatch = context.getStopWatch();
         if (stopWatch.getTotalTimeMillis() > 200) {
-            log.info(stopWatch.prettyPrint());
+            getLogger().info(stopWatch.prettyPrint());
         } else {
-            log.info(stopWatch.shortSummary());
+            getLogger().info(stopWatch.shortSummary());
         }
-        context.clear();
+        context.close();
     }
 
     protected void acceptConsumer(ObjectProvider<? extends BizConsumer<P, R, C>> consumers, C context) {

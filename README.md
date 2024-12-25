@@ -24,6 +24,7 @@ Spring Boot 框架的码匠实现
 ### RELEASE
 
 **1.0.1-SNAPSHOT**
+
 - 特性：升级SpringBoot版本`2.7.17`
 - 特性：升级SpringCloud版本`2021.0.8`
 - 特性：升级MyBatisPlus版本`3.5.3.1`
@@ -31,6 +32,7 @@ Spring Boot 框架的码匠实现
 - 特性：拆分组件为独立项目
 
 **1.0.0-SNAPSHOT**
+
 - 特性：新增SpringBoot版本`2.2.0.RELEASE`
 - 特性：新增SpringCloud版本`Hoxton.RELEASE`
 - 特性：新增项目架构
