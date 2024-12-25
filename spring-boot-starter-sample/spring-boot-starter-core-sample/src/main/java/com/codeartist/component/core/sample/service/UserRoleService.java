@@ -1,7 +1,7 @@
 package com.codeartist.component.core.sample.service;
 
 import com.codeartist.component.core.sample.entity.UserRole;
-import com.codeartist.component.core.support.curd.AbstractRelationService;
+import com.codeartist.component.core.support.curd.relation.AbstractRelationService;
 import org.springframework.stereotype.Service;
 
 /**

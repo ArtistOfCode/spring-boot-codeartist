@@ -3,9 +3,8 @@ package com.codeartist.component.core.support.business;
 import org.springframework.util.StopWatch;
 
 /**
- * 业务操作上下文
+ * 业务处理器上下文
  *
- * @param <P> 实体类型
  * @author AiJiangnan
  * @date 2023-12-09
  */

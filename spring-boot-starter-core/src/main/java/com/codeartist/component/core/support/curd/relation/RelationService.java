@@ -1,4 +1,4 @@
-package com.codeartist.component.core.support.curd;
+package com.codeartist.component.core.support.curd.relation;
 
 import com.codeartist.component.core.entity.Relation;
 

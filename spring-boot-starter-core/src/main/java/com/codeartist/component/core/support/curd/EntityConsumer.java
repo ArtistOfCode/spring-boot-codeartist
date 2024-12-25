@@ -18,4 +18,22 @@ public interface EntityConsumer<P, D, C extends EntityContext<P, D>> extends Biz
     default EntityAction[] getAction() {
         return new EntityAction[]{EntityAction.SAVE, EntityAction.UPDATE};
     }
+
+    /**
+     * 业务检查接口
+     */
+    interface EntityChecker<P, D, C extends EntityContext<P, D>> extends BizChecker<P, D, C>, EntityConsumer<P, D, C> {
+    }
+
+    /**
+     * 前置处理接口
+     */
+    interface PreEntityConsumer<P, D, C extends EntityContext<P, D>> extends PreConsumer<P, D, C>, EntityConsumer<P, D, C> {
+    }
+
+    /**
+     * 后置处理接口
+     */
+    interface PostEntityConsumer<P, D, C extends EntityContext<P, D>> extends PostConsumer<P, D, C>, EntityConsumer<P, D, C> {
+    }
 }

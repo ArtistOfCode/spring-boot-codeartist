@@ -1,24 +1,28 @@
 package com.codeartist.component.core.support.business;
 
 import com.codeartist.component.core.SpringContext;
+import com.codeartist.component.core.support.business.BizConsumer.BizChecker;
+import com.codeartist.component.core.support.business.BizConsumer.PostConsumer;
+import com.codeartist.component.core.support.business.BizConsumer.PreConsumer;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StopWatch;
 
 import java.util.Arrays;
 
 /**
- * 抽象服务类
+ * 业务处理器抽象实现，整个生命周期接口
  *
  * @author AiJiangnan
  * @date 2023/6/1
  */
 @Getter
-public abstract class AbstractHandler<P, R, C extends DefaultContext<P, R>> implements BaseHandler<P, R> {
+@Setter
+public abstract class AbstractHandler<P, R, C extends DefaultContext<P, R>> implements BizHandler<P, R, C> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -28,89 +32,42 @@ public abstract class AbstractHandler<P, R, C extends DefaultContext<P, R>> impl
     private ObjectProvider<PreConsumer<P, R, C>> preConsumers;
     @Autowired
     private ObjectProvider<PostConsumer<P, R, C>> postConsumers;
-    @Autowired
-    private ObjectProvider<TransactionTemplate> transactionTemplate;
 
-    /**
-     * 创建上下文
-     */
-    protected abstract C createContext();
-
-    protected abstract void doExecute(C context);
+    @SuppressWarnings("unchecked")
+    @Override
+    public C createContext(P param) {
+        C c = (C) new DefaultContext<P, R>();
+        c.setParam(param);
+        return c;
+    }
 
     @Override
-    public R execute(P param) {
-        basicCheck(param);
-
-        C context = createContext();
-        context.setParam(param);
-
-        // 带有事务的业务
-        getTransactionTemplate().executeWithoutResult(status -> {
-            businessCheck(context);
-
-            preConsumer(context);
-            doExecute(context);
-            postConsumer(context);
-
-            SpringContext.publishEvent(new BizEvent<>(this, context));
-            doFinally(context);
-        });
-        return context.getResult();
-    }
-
-    /**
-     * 获取事务操作接口（只允许一个事务Bean存在）
-     */
-    protected TransactionTemplate getTransactionTemplate() {
-        return this.transactionTemplate.getIfUnique();
-    }
-
-    /**
-     * 参数基础校验
-     */
-    protected void basicCheck(P param) {
+    public void basicCheck(P param) {
         SpringContext.validate(param);
     }
 
-    /**
-     * 业务校验
-     */
-    private void businessCheck(C context) {
-        bizCheckers.stream()
-                .filter(consumer -> filterAction(consumer, context))
-                .forEach(checker -> checker.accept(context));
+    @Override
+    public void businessCheck(C context) {
+        acceptConsumer(getBizCheckers(), context);
     }
 
-    /**
-     * 执行前置处理
-     */
-    private void preConsumer(C context) {
-        preConsumers.stream()
-                .filter(consumer -> filterAction(consumer, context))
-                .forEach(consumer -> consumer.accept(context));
+    @Override
+    public void preConsumer(C context) {
+        acceptConsumer(getPreConsumers(), context);
     }
 
-    /**
-     * 执行后置处理
-     */
-    private void postConsumer(C context) {
-        postConsumers.stream()
-                .filter(consumer -> filterAction(consumer, context))
-                .forEach(consumer -> consumer.accept(context));
+    @Override
+    public void postConsumer(C context) {
+        acceptConsumer(getPostConsumers(), context);
     }
 
-    /**
-     * 过滤Action处理
-     */
-    private boolean filterAction(BizConsumer<P, R, C> consumer, C context) {
-        return Arrays.stream(consumer.getAction()).anyMatch(action -> action == context.getAction());
+    @Override
+    public void publishEvent(C context) {
+        SpringContext.publishEvent(new BizEvent<>(this, context));
     }
 
-    /**
-     * 执行最终处理
-     */
-    private void doFinally(C context) {
+    @Override
+    public void close(C context) {
         StopWatch stopWatch = context.getStopWatch();
         if (stopWatch.getTotalTimeMillis() > 200) {
             log.info(stopWatch.prettyPrint());
@@ -118,5 +75,18 @@ public abstract class AbstractHandler<P, R, C extends DefaultContext<P, R>> impl
             log.info(stopWatch.shortSummary());
         }
         context.clear();
+    }
+
+    protected void acceptConsumer(ObjectProvider<? extends BizConsumer<P, R, C>> consumers, C context) {
+        consumers.stream()
+                .filter(consumer -> filterConsumer(consumer, context))
+                .forEach(consumer -> consumer.accept(context));
+    }
+
+    private boolean filterConsumer(BizConsumer<P, R, C> consumer, C context) {
+        if (consumer.getAction() == null || consumer.getAction().length == 0) {
+            return true;
+        }
+        return Arrays.stream(consumer.getAction()).anyMatch(action -> action == context.getAction());
     }
 }

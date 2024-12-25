@@ -2,7 +2,7 @@ package com.codeartist.component.core.sample.service.checker;
 
 import com.codeartist.component.core.sample.entity.User;
 import com.codeartist.component.core.sample.entity.param.UserParam;
-import com.codeartist.component.core.support.curd.EntityChecker;
+import com.codeartist.component.core.support.curd.EntityConsumer.EntityChecker;
 import com.codeartist.component.core.support.curd.EntityContext;
 import org.springframework.stereotype.Component;
 

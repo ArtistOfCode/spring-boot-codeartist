@@ -23,7 +23,7 @@ public class DefaultContext<P, R> implements Context<P, R> {
     }
 
     public DefaultContext(Enum<?> action) {
-        this.stopWatch = new StopWatch(action.name());
+        this.stopWatch = new StopWatch(action.name().toLowerCase());
     }
 
     @Override

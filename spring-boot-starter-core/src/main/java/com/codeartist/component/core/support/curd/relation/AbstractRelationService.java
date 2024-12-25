@@ -1,4 +1,4 @@
-package com.codeartist.component.core.support.curd;
+package com.codeartist.component.core.support.curd.relation;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;

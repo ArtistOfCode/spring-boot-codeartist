@@ -10,12 +10,14 @@ import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.entity.param.PageParam;
 import com.codeartist.component.core.exception.BadRequestException;
 import com.codeartist.component.core.support.auth.AuthContext;
+import com.codeartist.component.core.support.curd.EntityConsumer.EntityChecker;
+import com.codeartist.component.core.support.curd.EntityConsumer.PostEntityConsumer;
+import com.codeartist.component.core.support.curd.EntityConsumer.PreEntityConsumer;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.StopWatch;
 
@@ -44,8 +46,6 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
     private ObjectProvider<PreEntityConsumer<P, D, EntityContext<P, D>>> preEntityConsumers;
     @Autowired
     private ObjectProvider<PostEntityConsumer<P, D, EntityContext<P, D>>> postEntityConsumers;
-    @Autowired
-    private ObjectProvider<TransactionTemplate> transactionTemplate;
 
     @Override
     public R get(Long id) {
@@ -67,29 +67,34 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
 
     @Override
     public void save(P param) {
+//        new AbstractEntityHandler<P, D, DefaultEntityContext<P, D>>(EntityAction.SAVE, converter, authContext,
+//                entityCheckers, preEntityConsumers, postEntityConsumers) {
+//            @Override
+//            public void execute(DefaultEntityContext<P, D> context) {
+//                getMapper().insert(context.getEntity());
+//            }
+//        }.apply(param);
+
         basicCheck(param);
 
         DefaultEntityContext<P, D> context = createContext(EntityAction.SAVE);
         context.setParam(param);
 
-        // 带有事务的业务
-        getTransactionTemplate().executeWithoutResult(status -> {
-            Long userId = authContext.getUserId();
-            param.setCreateUser(userId);
-            param.setUpdateUser(userId);
+        Long userId = authContext.getUserId();
+        param.setCreateUser(userId);
+        param.setUpdateUser(userId);
 
-            businessCheck(context);
+        businessCheck(context);
 
-            D entity = getConverter().toDo(param);
-            context.setEntity(entity);
+        D entity = getConverter().toDo(param);
+        context.setEntity(entity);
 
-            preConsumer(context);
-            getMapper().insert(entity);
-            postConsumer(context);
+        preConsumer(context);
+        getMapper().insert(entity);
+        postConsumer(context);
 
-            SpringContext.publishEvent(new EntityEvent<>(this, context));
-            doFinally(context);
-        });
+        SpringContext.publishEvent(new EntityEvent<>(this, context));
+        doFinally(context);
     }
 
     @Override
@@ -104,28 +109,26 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
         context.setParam(param);
 
         // 带有事务的业务
-        getTransactionTemplate().executeWithoutResult(status -> {
-            Long userId = authContext.getUserId();
+        Long userId = authContext.getUserId();
 
-            D old = getMapper().selectById(param.getId());
-            context.setOldEntity(old);
+        D old = getMapper().selectById(param.getId());
+        context.setOldEntity(old);
 
-            if (old == null) {
-                throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
-            }
-            param.setUpdateUser(userId);
+        if (old == null) {
+            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+        }
+        param.setUpdateUser(userId);
 
-            businessCheck(context);
+        businessCheck(context);
 
-            D entity = getConverter().toDo(param);
-            context.setEntity(entity);
-            preConsumer(context);
-            getMapper().updateById(entity);
-            postConsumer(context);
+        D entity = getConverter().toDo(param);
+        context.setEntity(entity);
+        preConsumer(context);
+        getMapper().updateById(entity);
+        postConsumer(context);
 
-            SpringContext.publishEvent(new EntityEvent<>(this, context));
-            doFinally(context);
-        });
+        SpringContext.publishEvent(new EntityEvent<>(this, context));
+        doFinally(context);
     }
 
     @Override
@@ -140,17 +143,15 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
         context.setOldEntity(old);
 
         // 带有事务的业务
-        getTransactionTemplate().executeWithoutResult(status -> {
-            businessCheck(context);
+        businessCheck(context);
 
-            preConsumer(context);
-            getMapper().deleteById(id);
-            postConsumer(context);
+        preConsumer(context);
+        getMapper().deleteById(id);
+        postConsumer(context);
 
-            SpringContext.publishEvent(new EntityEvent<>(this, context));
+        SpringContext.publishEvent(new EntityEvent<>(this, context));
 
-            doFinally(context);
-        });
+        doFinally(context);
     }
 
     /**
@@ -158,13 +159,6 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
      */
     protected DefaultEntityContext<P, D> createContext(EntityAction action) {
         return new DefaultEntityContext<>(action);
-    }
-
-    /**
-     * 获取事务操作接口（只允许一个事务Bean存在）
-     */
-    protected TransactionTemplate getTransactionTemplate() {
-        return this.transactionTemplate.getIfUnique();
     }
 
     /**

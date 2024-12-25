@@ -8,7 +8,6 @@ import java.util.List;
  * @param <D> 数据库实体类型
  * @param <P> 参数实体类型
  * @param <R> 结果实体类型
- *
  * @author AiJiangnan
  * @date 2023/6/1
  */

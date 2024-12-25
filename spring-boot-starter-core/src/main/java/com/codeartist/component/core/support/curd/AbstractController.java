@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
  *
  * @param <P> 请求参数对象类型
  * @param <R> 响应实体对象类型
- *
  * @author AiJiangnan
  * @date 2023/6/1
  */
