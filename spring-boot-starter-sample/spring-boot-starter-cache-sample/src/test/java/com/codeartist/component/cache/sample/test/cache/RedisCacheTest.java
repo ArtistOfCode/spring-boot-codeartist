@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Redis缓存测试
  *
- * @author J.N.AI
+ * @author AiJiangnan
  * @date 2023-11-17
  */
 class RedisCacheTest extends AbstractSpringRunnerTests {

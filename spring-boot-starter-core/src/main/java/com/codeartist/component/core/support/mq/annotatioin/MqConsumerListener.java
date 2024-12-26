@@ -23,10 +23,19 @@ public @interface MqConsumerListener {
     @AliasFor("topic")
     String value() default "";
 
-    MqType type();
-
+    /**
+     * Topic
+     */
     @AliasFor("value")
     String topic() default "";
 
+    /**
+     * 消息类型
+     */
+    MqType type();
+
+    /**
+     * 消息Tag
+     */
     String tag() default MqHeaders.DEFAULT_TAG;
 }

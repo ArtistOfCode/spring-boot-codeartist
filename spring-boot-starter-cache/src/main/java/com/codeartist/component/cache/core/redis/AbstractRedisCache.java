@@ -9,7 +9,7 @@ import com.codeartist.component.core.support.serializer.TypeRef;
 import java.time.Duration;
 
 /**
- * 缓存抽象类
+ * Redis缓存抽象类
  *
  * @author AiJiangnan
  * @date 2021/5/25

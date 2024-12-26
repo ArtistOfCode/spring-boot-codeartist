@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 /**
- * Redis缓存
+ * Spring集成Redis缓存
  *
  * @author AiJiangnan
  * @date 2021/5/24

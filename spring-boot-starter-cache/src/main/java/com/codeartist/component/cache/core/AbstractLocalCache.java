@@ -13,8 +13,8 @@ import java.util.function.Supplier;
  */
 public abstract class AbstractLocalCache extends AbstractCacheSupport implements LocalCache {
 
-    public AbstractLocalCache(CacheType type, Metrics metrics) {
-        super(type, metrics);
+    public AbstractLocalCache(Metrics metrics) {
+        super(CacheType.LOCAL, metrics);
     }
 
     protected abstract <T> T doGet(Object key);

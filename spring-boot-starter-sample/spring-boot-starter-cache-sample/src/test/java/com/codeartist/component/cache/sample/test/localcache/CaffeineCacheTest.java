@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Caffeine本地缓存测试
  *
- * @author J.N.AI
+ * @author AiJiangnan
  * @date 2023-11-16
  */
 public class CaffeineCacheTest extends AbstractSpringRunnerTests {

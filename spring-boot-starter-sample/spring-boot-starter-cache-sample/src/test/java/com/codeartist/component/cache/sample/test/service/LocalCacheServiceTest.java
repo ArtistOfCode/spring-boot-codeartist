@@ -12,17 +12,17 @@ import org.springframework.util.StopWatch;
  * @author AiJiangnan
  * @date 2023-12-01
  */
-class RedisCacheServiceTest extends AbstractSpringRunnerTests {
+class LocalCacheServiceTest extends AbstractSpringRunnerTests {
 
     @Autowired
-    private CacheService redisCacheService;
+    private CacheService localCacheService;
 
     @Test
     void cache() {
         final StopWatch stopWatch = new StopWatch();
-        redisCacheService.cache(stopWatch);
-        redisCacheService.cache(stopWatch);
-        redisCacheService.cache(stopWatch);
+        localCacheService.cache(stopWatch);
+        localCacheService.cache(stopWatch);
+        localCacheService.cache(stopWatch);
         Assertions.assertEquals(1, stopWatch.getTaskCount());
     }
 }

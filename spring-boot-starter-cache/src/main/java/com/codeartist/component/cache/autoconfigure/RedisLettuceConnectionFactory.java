@@ -27,7 +27,7 @@ import java.time.Duration;
 /**
  * Redis连接工厂
  *
- * @author J.N.AI
+ * @author AiJiangnan
  * @date 2023-11-17
  */
 public class RedisLettuceConnectionFactory {

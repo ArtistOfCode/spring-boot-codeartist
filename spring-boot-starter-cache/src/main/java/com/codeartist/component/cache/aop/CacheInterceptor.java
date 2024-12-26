@@ -8,6 +8,7 @@ import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.exception.BusinessException;
 import com.codeartist.component.core.support.serializer.TypeRef;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -25,29 +26,33 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * @author J.N.AI
+ * 缓存注解拦截器
+ *
+ * @author AiJiangnan
  * @date 2023-12-01
  */
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class CacheInterceptor implements MethodInterceptor {
 
-    private CacheOperationSource cacheOperationSource;
-    private Map<String, LocalCache> localCacheMap;
-    private Map<String, Cache> cacheMap;
+    private final static SpelExpressionParser parser = new SpelExpressionParser();
+    private final static ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
-    private final SpelExpressionParser parser = new SpelExpressionParser();
-    private final ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
+    private final CacheOperationSource cacheOperationSource;
+    private final Map<String, LocalCache> localCacheMap;
+    private final Map<String, Cache> cacheMap;
 
     @Override
     public Object invoke(MethodInvocation invocation) {
         Method method = invocation.getMethod();
         Object target = invocation.getThis();
 
-        Map<CacheAction, CacheOperation> ops = cacheOperationSource.getCacheOperations(method, getTargetClass(target))
+        Map<CacheAction, CacheOperation> ops = cacheOperationSource.getOperations(method, getTargetClass(target))
                 .stream().collect(Collectors.toMap(CacheOperation::getAction, Function.identity()));
 
         CacheOperation cacheOperation = ops.get(CacheAction.CACHE);
@@ -70,49 +75,54 @@ public class CacheInterceptor implements MethodInterceptor {
     }
 
     private Object invokeWithCache(CacheOperationInvoker invoker, MethodInvocation invocation, CacheOperation cacheOperation) {
-        Object returnValue = null;
-
-        if (cacheOperation != null) {
-            String key = getExpressionKey(invocation, cacheOperation);
-            Duration duration = cacheOperation.getDuration();
-            Method method = invocation.getMethod();
-
-            switch (cacheOperation.getType()) {
-                case LOCAL:
-                    returnValue = getLocalCache(cacheOperation.getCacheRef())
-                            .get(key, invoker::invoke);
-                    break;
-                case REDIS:
-                    returnValue = getCache(cacheOperation.getRedisCacheRef())
-                            .get(key, duration, getTypeRef(method), invoker::invoke);
-                    break;
-                case COMBINE:
-                    LocalCache localCache = getLocalCache(cacheOperation.getCacheRef());
-                    Cache cache = getCache(cacheOperation.getRedisCacheRef());
-                    returnValue = localCache.get(key, () -> cache.get(key, duration, getTypeRef(method), invoker::invoke));
-                    break;
-            }
+        if (cacheOperation == null) {
+            return invoker.invoke();
         }
 
-        return returnValue != null ? returnValue : invoker.invoke();
+        Object returnValue = null;
+        String key = getExpressionKey(invocation, cacheOperation);
+        Duration duration = cacheOperation.getDuration();
+        Method method = invocation.getMethod();
+        Supplier<Object> valueLoader = invoker::invoke;
+        TypeRef<Object> returnTypeRef = getTypeRef(method);
+
+        switch (cacheOperation.getType()) {
+            case LOCAL:
+                returnValue = getLocalCache(cacheOperation.getCacheRef()).get(key, valueLoader);
+                break;
+            case REDIS:
+                returnValue = getCache(cacheOperation.getRedisCacheRef()).get(key, duration, returnTypeRef, valueLoader);
+                break;
+            case COMBINE:
+                Cache cache = getCache(cacheOperation.getRedisCacheRef());
+                LocalCache localCache = getLocalCache(cacheOperation.getCacheRef());
+                returnValue = localCache.get(key, () -> cache.get(key, duration, returnTypeRef, invoker::invoke));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + cacheOperation.getType());
+        }
+
+        return returnValue;
     }
 
     private void invokeWithDeleteCache(MethodInvocation invocation, CacheOperation cacheOperation) {
-        if (cacheOperation != null) {
-            String key = getExpressionKey(invocation, cacheOperation);
+        if (cacheOperation == null) {
+            return;
+        }
 
-            switch (cacheOperation.getType()) {
-                case LOCAL:
-                    getLocalCache(cacheOperation.getCacheRef()).delete(key);
-                    break;
-                case REDIS:
-                    getCache(cacheOperation.getRedisCacheRef()).delete(key);
-                    break;
-                case COMBINE:
-                    getLocalCache(cacheOperation.getCacheRef()).delete(key);
-                    getCache(cacheOperation.getRedisCacheRef()).delete(key);
-                    break;
-            }
+        String key = getExpressionKey(invocation, cacheOperation);
+
+        switch (cacheOperation.getType()) {
+            case LOCAL:
+                getLocalCache(cacheOperation.getCacheRef()).delete(key);
+                break;
+            case REDIS:
+                getCache(cacheOperation.getRedisCacheRef()).delete(key);
+                break;
+            case COMBINE:
+                getLocalCache(cacheOperation.getCacheRef()).delete(key);
+                getCache(cacheOperation.getRedisCacheRef()).delete(key);
+                break;
         }
     }
 

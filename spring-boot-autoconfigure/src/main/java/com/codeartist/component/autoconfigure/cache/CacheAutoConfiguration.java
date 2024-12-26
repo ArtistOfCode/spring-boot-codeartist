@@ -2,24 +2,12 @@ package com.codeartist.component.autoconfigure.cache;
 
 import com.codeartist.component.cache.CaffeineAutoConfiguration;
 import com.codeartist.component.cache.RedisAutoConfiguration;
-import com.codeartist.component.cache.aop.CacheAnnotationPointcut;
-import com.codeartist.component.cache.aop.CacheInterceptor;
-import com.codeartist.component.cache.aop.CacheOperationSource;
 import com.codeartist.component.cache.bean.CacheProperties;
-import com.codeartist.component.cache.core.Cache;
-import com.codeartist.component.cache.core.LocalCache;
-import com.codeartist.component.cache.core.redis.RedisCache;
-import org.springframework.aop.PointcutAdvisor;
-import org.springframework.aop.support.DefaultBeanFactoryPointcutAdvisor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
-import java.util.Map;
 
 /**
  * 缓存组件
@@ -34,34 +22,4 @@ import java.util.Map;
 @AutoConfigureAfter(org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class)
 public class CacheAutoConfiguration {
 
-    @Bean
-    public CacheOperationSource cacheOperationSource() {
-        return new CacheOperationSource();
-    }
-
-    @Bean
-    public CacheInterceptor cacheInterceptor(CacheOperationSource cacheOperationSource,
-                                             Map<String, LocalCache> localCacheMap,
-                                             Map<String, Cache> cacheMap) {
-        CacheInterceptor interceptor = new CacheInterceptor();
-        interceptor.setCacheOperationSource(cacheOperationSource);
-        interceptor.setLocalCacheMap(localCacheMap);
-        interceptor.setCacheMap(cacheMap);
-        return interceptor;
-    }
-
-    //    @Bean
-    public PointcutAdvisor cachePointcutAdvisor(CacheOperationSource cacheOperationSource,
-                                                CacheInterceptor cacheInterceptor) {
-        DefaultBeanFactoryPointcutAdvisor advisor = new DefaultBeanFactoryPointcutAdvisor();
-        advisor.setAdvice(cacheInterceptor);
-        advisor.setPointcut(new CacheAnnotationPointcut(cacheOperationSource));
-        return advisor;
-    }
-
-    @Bean
-    @ConditionalOnBean(RedisCache.class)
-    public CaptchaConsumerAspect captchaConsumerAspect(RedisCache defaultRedisCache) {
-        return new CaptchaConsumerAspect(defaultRedisCache);
-    }
 }

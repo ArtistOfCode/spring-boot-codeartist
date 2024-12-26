@@ -2,16 +2,20 @@ package com.codeartist.component.cache.aop;
 
 import com.codeartist.component.cache.bean.CacheAction;
 import com.codeartist.component.core.support.cache.CacheType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author J.N.AI
+ * 缓存操作实体
+ *
+ * @author AiJiangnan
  * @date 2023-12-01
  */
-@Data
+@Getter
+@Setter
 public class CacheOperation {
 
     private CacheAction action;

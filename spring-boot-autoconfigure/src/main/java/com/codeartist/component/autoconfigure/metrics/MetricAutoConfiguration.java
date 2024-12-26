@@ -23,10 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2022/7/15
  */
 @Configuration(proxyBeanMethods = false)
-@Import({MetricsRegistryAutoConfiguration.class,
-        MetricAutoConfiguration.WebMetricAutoConfiguration.class})
+@Import({MetricsRegistryAutoConfiguration.class, MetricAutoConfiguration.WebMetricAutoConfiguration.class})
 public class MetricAutoConfiguration {
-
 
     /**
      * 默认使用指标收集
