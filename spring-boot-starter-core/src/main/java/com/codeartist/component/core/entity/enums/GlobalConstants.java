@@ -22,7 +22,25 @@ public interface GlobalConstants {
     String MODULE_PACKAGE_KEY = "#{'${spring.application.module-package:}'.split(',')}";
 
     /**
+     * 缓存Key隔离标识
+     */
+    String DELIMITER = ":";
+
+    /**
      * 默认标识
      */
     String DEFAULT = "default";
+
+    /**
+     * 图形验证码
+     */
+    String PIC_CAPTCHA_KEY = "CAPTCHA:PIC:";
+    /**
+     * 短信验证码
+     */
+    String SMS_CAPTCHA_KEY = "CAPTCHA:SMS:";
+    /**
+     * 邮箱验证码
+     */
+    String EMAIL_CAPTCHA_KEY = "CAPTCHA:EMAIL:";
 }

@@ -1,6 +1,6 @@
 package com.codeartist.component.cache.core;
 
-import com.codeartist.component.cache.bean.CacheProperties;
+import com.codeartist.component.core.entity.enums.GlobalConstants;
 import com.codeartist.component.core.support.cache.CacheType;
 import com.codeartist.component.core.support.metric.Metrics;
 import org.springframework.util.Assert;
@@ -28,12 +28,12 @@ public abstract class AbstractCacheSupport {
 
     protected void hit(String key) {
         metrics.counter(CACHE_HIT_METRIC,
-                METRIC_TYPE, type.name(), METRIC_KEY, key.split(CacheProperties.DELIMITER)[0]);
+                METRIC_TYPE, type.name(), METRIC_KEY, key.split(GlobalConstants.DELIMITER)[0]);
     }
 
     protected void miss(String key) {
         metrics.counter(CACHE_MISS_METRIC,
-                METRIC_TYPE, type.name(), METRIC_KEY, key.split(CacheProperties.DELIMITER)[0]);
+                METRIC_TYPE, type.name(), METRIC_KEY, key.split(GlobalConstants.DELIMITER)[0]);
     }
 
     protected void checkNull(Object key) {

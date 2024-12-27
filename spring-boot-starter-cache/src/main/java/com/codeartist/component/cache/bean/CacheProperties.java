@@ -15,8 +15,6 @@ import java.time.Duration;
 @ConfigurationProperties("spring.cache")
 public class CacheProperties {
 
-    public static final String DELIMITER = ":";
-
     private Duration nullTimeout = Duration.ofMinutes(2);
 
     private Caffeine caffeine = new Caffeine();

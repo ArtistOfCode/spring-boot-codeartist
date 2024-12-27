@@ -10,7 +10,7 @@ import java.util.UUID;
  * @author AiJiangnan
  * @date 2023/2/24
  */
-public class DefaultIdGenerator implements IdGenerator {
+public class DefaultIdentityTemplate implements IdentityTemplate {
 
     @Override
     public Long nextID() {

@@ -6,7 +6,7 @@ package com.codeartist.component.core.support.uuid;
  * @author AiJiangnan
  * @date 2023/2/21
  */
-public interface IdGenerator {
+public interface IdentityTemplate {
 
     Long nextID();
 

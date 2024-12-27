@@ -39,7 +39,9 @@ public abstract class AbstractHandler<P, R, C extends Context<P, R>> implements 
     @SuppressWarnings("unchecked")
     @Override
     public C createContext(P param) {
-        return (C) new DefaultContext<P, R>();
+        DefaultContext<P, R> context = new DefaultContext<>();
+        context.setParam(param);
+        return (C) context;
     }
 
     @Override

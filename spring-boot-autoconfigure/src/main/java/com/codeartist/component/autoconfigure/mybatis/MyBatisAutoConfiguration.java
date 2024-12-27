@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.codeartist.component.core.support.serializer.JacksonSerializer;
-import com.codeartist.component.core.support.uuid.DefaultIdGenerator;
-import com.codeartist.component.core.support.uuid.IdGenerator;
+import com.codeartist.component.core.support.uuid.DefaultIdentityTemplate;
+import com.codeartist.component.core.support.uuid.IdentityTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +45,7 @@ public class MyBatisAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public IdGenerator idGenerator() {
-        return new DefaultIdGenerator();
+    public IdentityTemplate idGenerator() {
+        return new DefaultIdentityTemplate();
     }
 }

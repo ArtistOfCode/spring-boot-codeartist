@@ -13,6 +13,11 @@ import java.util.Optional;
  */
 public class DefaultAuthContext implements AuthContext {
 
+    @Override
+    public void setPrincipal(Principal principal) {
+        WebUtils.getRequest().getSession().setAttribute(Principal.class.getName(), principal);
+    }
+
     public Long getUserId() {
         return Optional.ofNullable(getPrincipal()).map(Principal::getId).orElse(null);
     }

@@ -1,7 +1,6 @@
 package com.codeartist.component.autoconfigure.datasource;
 
 import com.baomidou.mybatisplus.autoconfigure.*;
-import com.codeartist.component.core.entity.enums.Environments;
 import com.codeartist.component.datasource.bean.MultiDataSourceProperties;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
@@ -13,13 +12,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -32,21 +26,6 @@ import java.util.List;
 @ConditionalOnClass({MultiDataSourceProperties.class})
 @EnableConfigurationProperties(MybatisPlusProperties.class)
 public class DataSourceAutoconfiguration {
-
-    /**
-     * 单元测试使用内置数据库
-     */
-    @Bean
-    @Profile(Environments.Profiles.JUNIT)
-    public EmbeddedDatabase embeddedDatabase() {
-        return new EmbeddedDatabaseBuilder()
-                .generateUniqueName(true)
-                .setType(EmbeddedDatabaseType.H2)
-                .setScriptEncoding(StandardCharsets.UTF_8.name())
-                .ignoreFailedDrops(true)
-                .addScript("sql/init.sql")
-                .build();
-    }
 
     /**
      * 使用MyBatisPlus的配置来创建SqlSessionFactory和SqlSessionTemplate

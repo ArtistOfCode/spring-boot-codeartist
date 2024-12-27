@@ -12,6 +12,8 @@ import java.util.Objects;
  */
 public interface AuthContext {
 
+    void setPrincipal(Principal principal);
+
     Long getUserId();
 
     Principal getPrincipal();
