@@ -2,10 +2,9 @@ package com.codeartist.component.core.sample.test.controller;
 
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.sample.entity.param.UserParam;
-import com.codeartist.component.core.sample.test.AbstractSpringWebRunnerTests;
 import com.codeartist.component.core.util.JSON;
+import com.codeartist.component.test.AbstractSpringWebRunnerTests;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,7 +23,7 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
     @Test
     void client() throws Exception {
         mockMvc.perform(get("/api/exception/client"))
-                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_CLIENT_ERROR.name()))
                 .andDo(print());
     }
@@ -32,7 +31,7 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
     @Test
     void business() throws Exception {
         mockMvc.perform(get("/api/exception/business"))
-                .andExpect(status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()))
+                .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_BUSINESS_ERROR.name()))
                 .andDo(print());
     }
@@ -40,7 +39,7 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
     @Test
     void server() throws Exception {
         mockMvc.perform(get("/api/exception/server"))
-                .andExpect(status().is(HttpStatus.SERVICE_UNAVAILABLE.value()))
+                .andExpect(status().isServiceUnavailable())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_SERVICE_ERROR.name()))
                 .andDo(print());
     }
@@ -51,7 +50,7 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
         mockMvc.perform(post("/api/exception/error")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(param)))
-                .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_CLIENT_ERROR.name()))
                 .andDo(print());
     }

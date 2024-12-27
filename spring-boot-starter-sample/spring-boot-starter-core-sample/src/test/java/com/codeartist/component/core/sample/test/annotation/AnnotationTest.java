@@ -1,7 +1,7 @@
 package com.codeartist.component.core.sample.test.annotation;
 
-import com.codeartist.component.core.sample.test.AbstractSpringWebRunnerTests;
 import com.codeartist.component.core.support.props.AppProperties;
+import com.codeartist.component.test.AbstractSpringWebRunnerTests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

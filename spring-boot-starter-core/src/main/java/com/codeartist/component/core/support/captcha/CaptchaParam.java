@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 public interface CaptchaParam {
 
+    @Schema(description = "验证码校验类型")
+    CaptchaType getType();
+
     @Schema(description = "验证码校验Key")
     String getKey();
 

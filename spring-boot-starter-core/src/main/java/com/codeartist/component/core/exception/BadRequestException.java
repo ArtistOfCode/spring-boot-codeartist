@@ -2,11 +2,6 @@ package com.codeartist.component.core.exception;
 
 import com.codeartist.component.core.support.message.I18nMessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.CollectionUtils;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import java.util.Set;
 
 /**
  * 请求异常，返回客户端异常消息，后端不打印日志
@@ -34,16 +29,5 @@ public class BadRequestException extends HttpException {
 
     public BadRequestException(HttpStatus httpStatus, I18nMessageSource i18nMessageSource, Object[] args, Throwable cause) {
         super(httpStatus, i18nMessageSource, args, cause);
-    }
-
-    public static String getMessage(ConstraintViolationException e) {
-        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-
-        if (CollectionUtils.isEmpty(violations)) {
-            return null;
-        }
-
-        ConstraintViolation<?> first = violations.stream().findFirst().get();
-        return first.getPropertyPath() + first.getMessage();
     }
 }

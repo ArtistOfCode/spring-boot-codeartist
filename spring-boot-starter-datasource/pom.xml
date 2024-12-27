@@ -9,7 +9,6 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-starter-datasource</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
 
     <description>数据源组件</description>
 

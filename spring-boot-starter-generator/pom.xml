@@ -9,7 +9,6 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-starter-generator</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
 
     <description>代码生成组件</description>
 

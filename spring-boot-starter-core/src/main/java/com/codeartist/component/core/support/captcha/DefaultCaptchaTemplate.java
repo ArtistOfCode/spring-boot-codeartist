@@ -1,15 +1,12 @@
 package com.codeartist.component.core.support.captcha;
 
 
-import com.codeartist.component.core.entity.enums.GlobalConstants;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
-import java.time.Duration;
 
 /**
  * 验证码默认实现
@@ -20,18 +17,10 @@ import java.time.Duration;
  * @date 2024/11/13
  */
 @Getter
+@RequiredArgsConstructor
 public class DefaultCaptchaTemplate implements CaptchaTemplate {
 
-    @Value("${captcha.pic.timeout:10}")
-    private Duration picCaptchaDuration;
-    @Value("${captcha.sms.timeout:3}")
-    private Duration smsCaptchaDuration;
-    @Value("${captcha.email.timeout:5}")
-    private Duration emailCaptchaDuration;
-    @Value("${captcha.cache.max-size:1000}")
-    private Integer maxSize;
-    @Value("${captcha.cache.max-error-count:3}")
-    private Byte maxErrorCount;
+    private final CaptchaProperties captchaProperties;
 
     private Cache<String, CaptchaCache> picCaptchaCache;
     private Cache<String, CaptchaCache> smsCaptchaCache;
@@ -39,32 +28,22 @@ public class DefaultCaptchaTemplate implements CaptchaTemplate {
 
     @PostConstruct
     public void init() {
-        this.picCaptchaCache = Caffeine.newBuilder().expireAfterWrite(this.picCaptchaDuration).maximumSize(this.maxSize).build();
-        this.smsCaptchaCache = Caffeine.newBuilder().expireAfterWrite(this.smsCaptchaDuration).maximumSize(this.maxSize).build();
-        this.emailCaptchaCache = Caffeine.newBuilder().expireAfterWrite(this.emailCaptchaDuration).maximumSize(this.maxSize).build();
+        this.picCaptchaCache = this.buildCache(captchaProperties.getPic());
+        this.smsCaptchaCache = this.buildCache(captchaProperties.getSms());
+        this.emailCaptchaCache = this.buildCache(captchaProperties.getEmail());
     }
 
     @Override
     public void accept(CaptchaParam param) {
-        String key = param.getKey();
-
-        int idx = key.lastIndexOf(GlobalConstants.DELIMITER);
-        String type = key.substring(0, idx);
-        String cacheKey = key.substring(idx);
-
-        Cache<String, CaptchaCache> cache = getCache(type);
+        String cacheKey = getCacheKey(param);
+        Cache<String, CaptchaCache> cache = getCache(param.getType());
         cache.put(cacheKey, new CaptchaCache(param.getCode()));
     }
 
     @Override
     public boolean test(CaptchaParam param) {
-        String key = param.getKey();
-
-        int idx = key.lastIndexOf(GlobalConstants.DELIMITER);
-        String type = key.substring(0, idx);
-        String cacheKey = key.substring(idx);
-
-        Cache<String, CaptchaCache> cache = getCache(type);
+        String cacheKey = getCacheKey(param);
+        Cache<String, CaptchaCache> cache = getCache(param.getType());
         CaptchaCache actual = cache.getIfPresent(cacheKey);
 
         // 验证码缓存为空
@@ -73,7 +52,7 @@ public class DefaultCaptchaTemplate implements CaptchaTemplate {
         }
 
         // 验证码错误最大次数校验
-        if (actual.errorCount >= this.maxErrorCount) {
+        if (actual.errorCount >= getConfig(param.getType()).getMaxErrorCount()) {
             cache.invalidate(cacheKey);
             return false;
         }
@@ -89,17 +68,38 @@ public class DefaultCaptchaTemplate implements CaptchaTemplate {
         }
     }
 
-    private Cache<String, CaptchaCache> getCache(String type) {
+    private String getCacheKey(CaptchaParam param) {
+        return param.getKey();
+    }
+
+    private CaptchaProperties.CaptchaConfig getConfig(CaptchaType type) {
         switch (type) {
-            case GlobalConstants.PIC_CAPTCHA_KEY:
+            case PIC:
+                return this.captchaProperties.getPic();
+            case SMS:
+                return this.captchaProperties.getSms();
+            case EMAIL:
+                return this.captchaProperties.getEmail();
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
+    }
+
+    private Cache<String, CaptchaCache> getCache(CaptchaType type) {
+        switch (type) {
+            case PIC:
                 return this.picCaptchaCache;
-            case GlobalConstants.SMS_CAPTCHA_KEY:
+            case SMS:
                 return this.smsCaptchaCache;
-            case GlobalConstants.EMAIL_CAPTCHA_KEY:
+            case EMAIL:
                 return this.emailCaptchaCache;
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
         }
+    }
+
+    private Cache<String, CaptchaCache> buildCache(CaptchaProperties.CaptchaConfig config) {
+        return Caffeine.newBuilder().expireAfterWrite(config.getTimeout()).maximumSize(config.getMaxSize()).build();
     }
 
     @Getter

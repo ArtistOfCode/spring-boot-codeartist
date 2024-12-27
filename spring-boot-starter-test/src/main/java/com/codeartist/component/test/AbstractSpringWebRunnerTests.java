@@ -1,6 +1,6 @@
-package com.codeartist.component.core.sample.test;
+package com.codeartist.component.test;
 
-import com.codeartist.component.core.sample.CoreApplication;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +13,16 @@ import org.springframework.test.web.servlet.ResultHandler;
 import java.nio.charset.StandardCharsets;
 
 /**
- * SpringBoot Web单元测试
+ * Web环境基础测试类
  *
  * @author AiJiangnan
- * @date 2020/7/15
+ * @date 2024/12/27
  */
+
 @ActiveProfiles({"junit", "local"})
-@SpringBootTest(classes = CoreApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public abstract class AbstractSpringWebRunnerTests {
+public class AbstractSpringWebRunnerTests {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -29,6 +30,6 @@ public abstract class AbstractSpringWebRunnerTests {
     protected MockMvc mockMvc;
 
     protected ResultHandler print() {
-        return result -> logger.info(new String(result.getResponse().getContentAsByteArray(), StandardCharsets.UTF_8));
+        return result -> logger.info(result.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
 }

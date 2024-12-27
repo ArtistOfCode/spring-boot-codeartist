@@ -2,9 +2,12 @@ package com.codeartist.component.core.sample.service.consumer;
 
 import com.codeartist.component.core.sample.entity.User;
 import com.codeartist.component.core.sample.entity.param.UserParam;
+import com.codeartist.component.core.support.curd.EntityAction;
 import com.codeartist.component.core.support.curd.EntityConsumer;
 import com.codeartist.component.core.support.curd.EntityContext;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.CredentialHandler;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,10 +18,20 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class UserConsumer implements EntityConsumer<UserParam, User> {
+@RequiredArgsConstructor
+public class UserConsumer implements EntityConsumer.PreEntityConsumer<UserParam, User> {
+
+    private final CredentialHandler credentialHandler;
+
+    @Override
+    public EntityAction[] getAction() {
+        return new EntityAction[]{EntityAction.SAVE};
+    }
 
     @Override
     public void doAccept(EntityContext<UserParam, User> context) {
-
+        String password = context.getParam().getPassword();
+        String mutate = credentialHandler.mutate(password);
+        context.getEntity().setPassword(mutate);
     }
 }

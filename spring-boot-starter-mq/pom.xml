@@ -9,7 +9,6 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-starter-mq</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
 
     <description>消息队列组件</description>
 

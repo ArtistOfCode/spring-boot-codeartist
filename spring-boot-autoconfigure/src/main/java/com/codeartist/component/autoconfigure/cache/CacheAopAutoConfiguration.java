@@ -3,12 +3,14 @@ package com.codeartist.component.autoconfigure.cache;
 
 import com.codeartist.component.cache.aop.CacheInterceptor;
 import com.codeartist.component.cache.aop.CacheOperationSource;
+import com.codeartist.component.cache.bean.CacheProperties;
 import com.codeartist.component.cache.core.Cache;
 import com.codeartist.component.cache.core.LocalCache;
 import com.codeartist.component.core.support.aop.AnnotationPointcut;
 import org.springframework.aop.PointcutAdvisor;
 import org.springframework.aop.support.DefaultBeanFactoryPointcutAdvisor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -23,6 +25,7 @@ import java.util.Map;
  * @date 2024/12/26
  */
 @Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(CacheProperties.class)
 @Role(RootBeanDefinition.ROLE_INFRASTRUCTURE)
 public class CacheAopAutoConfiguration {
 

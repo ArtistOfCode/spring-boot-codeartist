@@ -1,6 +1,6 @@
 package com.codeartist.component.core.sample.test.controller;
 
-import com.codeartist.component.core.sample.test.AbstractSpringWebRunnerTests;
+import com.codeartist.component.test.AbstractSpringWebRunnerTests;
 import org.junit.jupiter.api.Test;
 
 /**

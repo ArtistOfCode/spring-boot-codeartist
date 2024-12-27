@@ -10,10 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 客户端异常处理
@@ -29,12 +35,12 @@ public class ClientExceptionHandler {
     @Autowired
     private AppProperties appProperties;
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResp> constraintViolationException(ConstraintViolationException e) {
+    @ExceptionHandler({BindException.class, ConstraintViolationException.class})
+    public ResponseEntity<ErrorResp> validateException(Exception e) {
         ErrorResp error = ErrorResp.builder()
                 .service(appProperties.getName())
                 .code(GlobalErrorCode.GLOBAL_CLIENT_ERROR.name())
-                .message(BadRequestException.getMessage(e))
+                .message(parseExceptionMessage(e))
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -49,5 +55,24 @@ public class ClientExceptionHandler {
                 .build();
 
         return ResponseEntity.status(e.getHttpStatus()).body(error);
+    }
+
+    private String parseExceptionMessage(Exception e) {
+        if (e instanceof BindException) {
+            List<FieldError> fieldErrors = ((BindException) e).getFieldErrors();
+            if (CollectionUtils.isEmpty(fieldErrors)) {
+                return null;
+            }
+            FieldError fieldError = fieldErrors.get(0);
+            return "[" + fieldError.getField() + "]" + fieldError.getDefaultMessage();
+        } else if (e instanceof ConstraintViolationException) {
+            Set<ConstraintViolation<?>> violations = ((ConstraintViolationException) e).getConstraintViolations();
+            if (CollectionUtils.isEmpty(violations)) {
+                return null;
+            }
+            ConstraintViolation<?> first = violations.stream().findFirst().get();
+            return "[" + first.getPropertyPath() + "]" + first.getMessage();
+        }
+        return null;
     }
 }

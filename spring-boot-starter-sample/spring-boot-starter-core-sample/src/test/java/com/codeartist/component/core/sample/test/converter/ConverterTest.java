@@ -3,8 +3,8 @@ package com.codeartist.component.core.sample.test.converter;
 import com.codeartist.component.core.sample.entity.User;
 import com.codeartist.component.core.sample.entity.converter.UserConverter;
 import com.codeartist.component.core.sample.entity.vo.UserVO;
-import com.codeartist.component.core.sample.test.AbstractSpringWebRunnerTests;
 import com.codeartist.component.core.util.JSON;
+import com.codeartist.component.test.AbstractSpringWebRunnerTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

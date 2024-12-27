@@ -9,7 +9,6 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-starter-web</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
 
     <description>Web组件，用于Web项目依赖</description>
 

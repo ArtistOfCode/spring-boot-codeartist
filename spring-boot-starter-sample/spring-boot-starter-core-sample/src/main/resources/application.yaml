@@ -16,4 +16,5 @@ spring.datasource.hikari.connection-test-query: SELECT 1
 spring.api.router.routes:
   - pattern:
       - /api/user/login
+      - /api/exception/**
     auth: false

@@ -23,25 +23,11 @@
         </dependency>
         <!--三方框架-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
+            <groupId>com.codeartist</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.codeartist</groupId>
-            <artifactId>spring-boot-starter-generator</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!--三方工具-->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>

@@ -9,7 +9,6 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>spring-boot-autoconfigure</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
 
     <description>自动配置组件</description>
 

@@ -16,15 +16,15 @@
     </properties>
 
     <modules>
-        <module>../spring-boot-dependencies</module>
         <module>../spring-boot-starter-core</module>
         <module>../spring-boot-starter-datasource</module>
         <module>../spring-boot-starter-cache</module>
-        <module>../spring-boot-starter-mq</module>
-        <module>../spring-boot-starter-metric</module>
+        <!--        <module>../spring-boot-starter-mq</module>-->
+        <!--        <module>../spring-boot-starter-metric</module>-->
         <module>../spring-boot-starter-web</module>
-        <module>../spring-boot-starter-sdk</module>
+        <!--        <module>../spring-boot-starter-sdk</module>-->
         <module>../spring-boot-starter-generator</module>
+        <module>../spring-boot-starter-test</module>
         <module>../spring-boot-autoconfigure</module>
     </modules>
 
