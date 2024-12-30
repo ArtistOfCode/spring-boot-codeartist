@@ -2,9 +2,6 @@ package com.codeartist.component.core.support.curd.relation;
 
 import com.codeartist.component.core.entity.Relation;
 
-import java.util.List;
-import java.util.function.Function;
-
 /**
  * 关联表操作接口
  *
@@ -13,9 +10,9 @@ import java.util.function.Function;
  */
 public interface RelationService<D> {
 
-    Relation get(Long id, Function<D, Long> field);
+    Relation<D> get(Relation<D> param);
 
-    void save(List<D> param, Function<D, Long> field);
+    void save(Relation<D> param);
 
-    void delete(Long id, Function<D, Long> field);
+    void delete(Relation<D> param);
 }

@@ -9,13 +9,13 @@ CREATE TABLE `t_user` (
 
 CREATE TABLE `t_role` (
   `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL COMMENT '真实姓名'
+  `name` varchar(50) NOT NULL COMMENT '角色名称'
 ) COMMENT '角色信息';
 
 CREATE TABLE `t_user_role` (
   `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) NOT NULL COMMENT '真实姓名',
-  `role_id` bigint(20) NOT NULL COMMENT '真实姓名'
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `role_id` bigint(20) NOT NULL COMMENT '角色ID'
 ) COMMENT '用户角色关联信息';
 
 INSERT INTO t_user (name,username,password) VALUES ('张三','ZhangSan','000000');
@@ -25,3 +25,6 @@ INSERT INTO t_user (name,username,password) VALUES ('赵六','ZhaoLiu','333333')
 
 INSERT INTO t_role (name) VALUES ('超级管理员');
 INSERT INTO t_role (name) VALUES ('测试角色');
+
+INSERT INTO t_user_role (user_id,role_id) VALUES (1,1);
+INSERT INTO t_user_role (user_id,role_id) VALUES (1,2);

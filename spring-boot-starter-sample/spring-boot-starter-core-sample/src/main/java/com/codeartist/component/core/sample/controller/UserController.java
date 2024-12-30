@@ -1,16 +1,16 @@
 package com.codeartist.component.core.sample.controller;
 
 import com.codeartist.component.core.entity.Principal;
-import com.codeartist.component.core.entity.Relation;
-import com.codeartist.component.core.sample.entity.UserRole;
 import com.codeartist.component.core.sample.entity.param.UserParam;
 import com.codeartist.component.core.sample.entity.vo.UserVO;
-import com.codeartist.component.core.sample.service.UserRoleService;
+import com.codeartist.component.core.support.auth.AuthContext;
 import com.codeartist.component.core.support.curd.AbstractController;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,25 +26,13 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController extends AbstractController<UserVO, UserParam> {
 
     @Autowired
-    private UserRoleService userRoleService;
-
-    @GetMapping("/role")
-    @Operation(summary = "查询关联信息")
-    public Relation relation(Long id) {
-        return userRoleService.get(id, UserRole::getUserId);
-    }
-
-    @PostMapping("/role")
-    @Operation(summary = "保存关联接口")
-    public void relation(@RequestBody Relation param) {
-        userRoleService.save(param.map(UserRole::new), UserRole::getUserId);
-    }
+    private AuthContext authContext;
 
     @PostMapping("login")
     public void login(@RequestBody UserParam param, HttpServletRequest request) {
         Principal principal = new Principal();
         principal.setName(param.getName());
         principal.setUsername(param.getUsername());
-        request.getSession().setAttribute(Principal.class.getName(), principal);
+        authContext.setPrincipal(principal);
     }
 }

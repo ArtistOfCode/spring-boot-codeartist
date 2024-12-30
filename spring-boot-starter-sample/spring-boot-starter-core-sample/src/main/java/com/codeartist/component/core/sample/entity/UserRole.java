@@ -29,12 +29,4 @@ public class UserRole {
      * 真实姓名
      */
     private Long roleId;
-
-    public UserRole() {
-    }
-
-    public UserRole(Long userId, Long roleId) {
-        this.userId = userId;
-        this.roleId = roleId;
-    }
 }

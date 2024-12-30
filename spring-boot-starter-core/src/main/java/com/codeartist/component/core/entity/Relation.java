@@ -1,18 +1,14 @@
 package com.codeartist.component.core.entity;
 
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 /**
  * 表关联参数
@@ -22,13 +18,11 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "表关联信息")
-public class Relation {
+public abstract class Relation<D> {
 
     @NotNull
-    @Schema(description = "1:N中的单条数据ID")
+    @Schema(description = "1:N中的单个数据ID")
     private Long id;
 
     @NotNull
@@ -36,10 +30,16 @@ public class Relation {
     @Schema(description = "1:N中的多个数据的ID")
     private Set<Long> ids;
 
-    public <D> List<D> map(BiFunction<Long, Long, D> func) {
-        if (this.ids == null || this.ids.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return this.ids.stream().map(nid -> func.apply(this.id, nid)).collect(Collectors.toList());
+    @JsonIgnore
+    private SFunction<D, Long> one;
+    @JsonIgnore
+    private SFunction<D, Long> more;
+
+    public Relation(SFunction<D, Long> one, SFunction<D, Long> more) {
+        this.one = one;
+        this.more = more;
     }
+
+    @JsonIgnore
+    public abstract D toRelEntity(Long more);
 }

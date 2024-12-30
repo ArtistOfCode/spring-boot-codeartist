@@ -1,18 +1,15 @@
 package com.codeartist.component.core.support.curd.relation;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.codeartist.component.core.entity.Relation;
+import com.codeartist.component.core.entity.enums.GlobalErrorCode;
+import com.codeartist.component.core.exception.BadRequestException;
 import lombok.Getter;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -25,43 +22,44 @@ import java.util.stream.Collectors;
 public abstract class AbstractRelationService<D> implements RelationService<D> {
 
     @Autowired
-    private BaseMapper<D> mapper;
-    @Autowired
-    private ObjectProvider<TransactionTemplate> transactionTemplate;
+    private RelationMapper<D> mapper;
 
     @Override
-    public Relation get(Long id, Function<D, Long> field) {
-        List<D> entityList = getMapper().selectList(Wrappers.<D>lambdaQuery().eq(field::apply, id));
+    public Relation<D> get(Relation<D> param) {
+        Long id = param.getId();
+        if (id == null) {
+            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+        }
+
+        List<D> entityList = getMapper().selectList(Wrappers.<D>lambdaQuery().eq(param.getOne(), id));
+
         if (CollectionUtils.isEmpty(entityList)) {
-            return new Relation(id, Collections.emptySet());
+            param.setIds(Collections.emptySet());
+        } else {
+            param.setIds(entityList.stream().map(param.getMore()).collect(Collectors.toSet()));
         }
-        Set<Long> ids = entityList.stream().map(field).collect(Collectors.toSet());
-        return new Relation(id, ids);
+
+        return param;
     }
 
     @Override
-    public void save(List<D> param, Function<D, Long> field) {
-        if (CollectionUtils.isEmpty(param)) {
-            return;
+    public void save(Relation<D> param) {
+        if (param.getId() == null || CollectionUtils.isEmpty(param.getIds())) {
+            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
         }
 
-        Long id = field.apply(param.get(0));
+        List<D> entity = param.getIds().stream().map(param::toRelEntity).collect(Collectors.toList());
 
-        getTransactionTemplate().executeWithoutResult(status -> {
-            delete(id, field);
-            getMapper().insert(param);
-        });
+        delete(param);
+        getMapper().insert(entity);
     }
 
     @Override
-    public void delete(Long id, Function<D, Long> field) {
-        getMapper().delete(Wrappers.<D>lambdaQuery().eq(field::apply, id));
-    }
+    public void delete(Relation<D> param) {
+        if (param.getId() == null) {
+            throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+        }
 
-    /**
-     * 获取事务操作接口（只允许一个事务Bean存在）
-     */
-    protected TransactionTemplate getTransactionTemplate() {
-        return this.transactionTemplate.getIfUnique();
+        getMapper().delete(Wrappers.<D>lambdaQuery().eq(param.getOne(), param.getId()));
     }
 }

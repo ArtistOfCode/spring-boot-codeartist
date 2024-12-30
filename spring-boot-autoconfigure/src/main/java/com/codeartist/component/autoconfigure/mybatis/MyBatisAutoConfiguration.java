@@ -45,7 +45,7 @@ public class MyBatisAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public IdentityTemplate idGenerator() {
+    public IdentityTemplate identityTemplate() {
         return new DefaultIdentityTemplate();
     }
 }
