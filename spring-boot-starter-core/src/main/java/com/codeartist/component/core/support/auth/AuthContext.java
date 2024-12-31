@@ -2,8 +2,6 @@ package com.codeartist.component.core.support.auth;
 
 import com.codeartist.component.core.entity.Principal;
 
-import java.util.Objects;
-
 /**
  * 权限上下文接口
  *
@@ -18,11 +16,9 @@ public interface AuthContext {
 
     Principal getPrincipal();
 
-    default Long getRequiredUserId() {
-        return Objects.requireNonNull(getUserId(), "UserId is null");
-    }
+    Long getRequiredUserId();
 
-    default Principal getRequiredPrincipal() {
-        return Objects.requireNonNull(getPrincipal(), "Principal is null");
-    }
+    Principal getRequiredPrincipal();
+
+    void invalidate();
 }

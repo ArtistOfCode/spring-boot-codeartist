@@ -3,6 +3,7 @@ package com.codeartist.component.core.support.auth;
 import com.codeartist.component.core.entity.Principal;
 import com.codeartist.component.core.util.WebUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -25,5 +26,20 @@ public class DefaultAuthContext implements AuthContext {
     @Override
     public Principal getPrincipal() {
         return WebUtils.getSession(Principal.class.getName());
+    }
+
+    @Override
+    public Long getRequiredUserId() {
+        return Objects.requireNonNull(getUserId(), "UserId is null");
+    }
+
+    @Override
+    public Principal getRequiredPrincipal() {
+        return Objects.requireNonNull(getPrincipal(), "Principal is null");
+    }
+
+    @Override
+    public void invalidate() {
+        WebUtils.getRequest().getSession().invalidate();
     }
 }

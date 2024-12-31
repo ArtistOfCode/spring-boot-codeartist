@@ -4,9 +4,10 @@ package com.codeartist.component.core.support.captcha;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 验证码默认实现
@@ -17,20 +18,19 @@ import javax.annotation.PostConstruct;
  * @date 2024/11/13
  */
 @Getter
-@RequiredArgsConstructor
-public class DefaultCaptchaTemplate implements CaptchaTemplate {
+public class DefaultCaptchaTemplate extends AbstractCaptchaTemplate {
 
-    private final CaptchaProperties captchaProperties;
+    private final static Map<CaptchaType, Cache<String, CaptchaCache>> cacheMap = new HashMap<>(CaptchaType.values().length);
 
-    private Cache<String, CaptchaCache> picCaptchaCache;
-    private Cache<String, CaptchaCache> smsCaptchaCache;
-    private Cache<String, CaptchaCache> emailCaptchaCache;
+    public DefaultCaptchaTemplate(CaptchaProperties captchaProperties) {
+        super(captchaProperties);
+    }
 
     @PostConstruct
     public void init() {
-        this.picCaptchaCache = this.buildCache(captchaProperties.getPic());
-        this.smsCaptchaCache = this.buildCache(captchaProperties.getSms());
-        this.emailCaptchaCache = this.buildCache(captchaProperties.getEmail());
+        for (CaptchaType type : CaptchaType.values()) {
+            cacheMap.put(type, this.buildCache(getConfig(type)));
+        }
     }
 
     @Override
@@ -52,17 +52,17 @@ public class DefaultCaptchaTemplate implements CaptchaTemplate {
         }
 
         // 验证码错误最大次数校验
-        if (actual.errorCount >= getConfig(param.getType()).getMaxErrorCount()) {
+        if (actual.getErrorCount() >= getConfig(param.getType()).getMaxErrorCount()) {
             cache.invalidate(cacheKey);
             return false;
         }
 
         // 验证码校验
-        if (actual.code.equalsIgnoreCase(param.getCode())) {
+        if (actual.getCode().equalsIgnoreCase(param.getCode())) {
             cache.invalidate(cacheKey);
             return true;
         } else {
-            actual.errorCount++;
+            actual.addErrorCount();
             cache.put(cacheKey, actual);
             return false;
         }
@@ -72,41 +72,11 @@ public class DefaultCaptchaTemplate implements CaptchaTemplate {
         return param.getKey();
     }
 
-    private CaptchaProperties.CaptchaConfig getConfig(CaptchaType type) {
-        switch (type) {
-            case PIC:
-                return this.captchaProperties.getPic();
-            case SMS:
-                return this.captchaProperties.getSms();
-            case EMAIL:
-                return this.captchaProperties.getEmail();
-            default:
-                throw new IllegalStateException("Unexpected value: " + type);
-        }
-    }
-
     private Cache<String, CaptchaCache> getCache(CaptchaType type) {
-        switch (type) {
-            case PIC:
-                return this.picCaptchaCache;
-            case SMS:
-                return this.smsCaptchaCache;
-            case EMAIL:
-                return this.emailCaptchaCache;
-            default:
-                throw new IllegalStateException("Unexpected value: " + type);
-        }
+        return cacheMap.get(type);
     }
 
     private Cache<String, CaptchaCache> buildCache(CaptchaProperties.CaptchaConfig config) {
         return Caffeine.newBuilder().expireAfterWrite(config.getTimeout()).maximumSize(config.getMaxSize()).build();
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    private static class CaptchaCache {
-
-        private final String code;
-        private byte errorCount;
     }
 }

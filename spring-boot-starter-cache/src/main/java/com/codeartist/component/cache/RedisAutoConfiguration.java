@@ -4,6 +4,8 @@ import com.codeartist.component.cache.autoconfigure.RedisLettuceConnectionFactor
 import com.codeartist.component.cache.bean.CacheProperties;
 import com.codeartist.component.cache.core.Cache;
 import com.codeartist.component.cache.core.redis.SpringRedisCache;
+import com.codeartist.component.cache.support.RedisCaptchaTemplate;
+import com.codeartist.component.core.support.captcha.CaptchaProperties;
 import com.codeartist.component.core.support.metric.Metrics;
 import io.lettuce.core.resource.ClientResources;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -38,5 +40,11 @@ public class RedisAutoConfiguration {
                                    CacheProperties cacheProperties,
                                    Metrics metrics) {
         return new SpringRedisCache(stringRedisTemplate, cacheProperties, metrics);
+    }
+
+    @Bean
+    @ConditionalOnBean(Cache.class)
+    public RedisCaptchaTemplate redisCaptchaTemplate(CaptchaProperties properties, Cache cache) {
+        return new RedisCaptchaTemplate(properties, cache);
     }
 }
