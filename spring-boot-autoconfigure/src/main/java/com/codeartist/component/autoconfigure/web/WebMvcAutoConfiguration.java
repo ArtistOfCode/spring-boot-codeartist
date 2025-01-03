@@ -4,6 +4,7 @@ import com.codeartist.component.autoconfigure.auth.WebAuthAutoConfiguration;
 import com.codeartist.component.autoconfigure.swagger.SwaggerAutoConfiguration;
 import com.codeartist.component.core.web.ClientExceptionHandler;
 import com.codeartist.component.core.web.ServerExceptionHandler;
+import com.codeartist.component.core.web.WebMvcConfiguration;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -24,7 +25,7 @@ import java.time.format.DateTimeFormatter;
  * @date 2023-11-12
  */
 @Configuration(proxyBeanMethods = false)
-@Import({SwaggerAutoConfiguration.class, WebAuthAutoConfiguration.class})
+@Import({WebMvcConfiguration.class, SwaggerAutoConfiguration.class, WebAuthAutoConfiguration.class})
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class WebMvcAutoConfiguration {
 

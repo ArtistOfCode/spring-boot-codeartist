@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 用户基本信息 控制器
  *
@@ -29,7 +27,7 @@ public class UserController extends AbstractController<UserVO, UserParam> {
     private AuthContext authContext;
 
     @PostMapping("login")
-    public void login(@RequestBody UserParam param, HttpServletRequest request) {
+    public void login(@RequestBody UserParam param) {
         Principal principal = new Principal();
         principal.setName(param.getName());
         principal.setUsername(param.getUsername());

@@ -2,7 +2,6 @@ package com.codeartist.component.autoconfigure.auth;
 
 import com.codeartist.component.core.support.auth.ApiRouteProperties;
 import com.codeartist.component.core.support.auth.AuthHandlerInterceptor;
-import com.codeartist.component.core.web.WebMvcConfiguration;
 import org.apache.catalina.CredentialHandler;
 import org.apache.catalina.realm.MessageDigestCredentialHandler;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,10 +31,5 @@ public class WebAuthAutoConfiguration {
     @Bean
     public AuthHandlerInterceptor authHandlerInterceptor() {
         return new AuthHandlerInterceptor();
-    }
-
-    @Bean
-    public WebMvcConfiguration webMvcConfiguration() {
-        return new WebMvcConfiguration();
     }
 }
