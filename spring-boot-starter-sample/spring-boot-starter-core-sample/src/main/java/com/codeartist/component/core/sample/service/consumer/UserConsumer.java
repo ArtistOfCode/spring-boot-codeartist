@@ -2,8 +2,8 @@ package com.codeartist.component.core.sample.service.consumer;
 
 import com.codeartist.component.core.sample.entity.User;
 import com.codeartist.component.core.sample.entity.param.UserParam;
+import com.codeartist.component.core.support.curd.AbstractEntityConsumer;
 import com.codeartist.component.core.support.curd.EntityAction;
-import com.codeartist.component.core.support.curd.EntityConsumer;
 import com.codeartist.component.core.support.curd.EntityContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserConsumer implements EntityConsumer.PreEntityConsumer<UserParam, User> {
+public class UserConsumer extends AbstractEntityConsumer<UserParam, User> {
 
     private final CredentialHandler credentialHandler;
 
@@ -29,7 +29,7 @@ public class UserConsumer implements EntityConsumer.PreEntityConsumer<UserParam,
     }
 
     @Override
-    public void doAccept(EntityContext<UserParam, User> context) {
+    public void doPreConsumer(EntityContext<UserParam, User> context) {
         String password = context.getParam().getPassword();
         String mutate = credentialHandler.mutate(password);
         context.getEntity().setPassword(mutate);

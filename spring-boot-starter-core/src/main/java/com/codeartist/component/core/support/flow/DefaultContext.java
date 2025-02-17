@@ -1,4 +1,4 @@
-package com.codeartist.component.core.support.business;
+package com.codeartist.component.core.support.flow;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import org.springframework.util.StopWatch;
  */
 @Getter
 @Setter
-public class DefaultContext<P, R> implements Context<P, R> {
+public class DefaultContext<P, R> implements Context<P> {
 
     private P param;
     private R result;
@@ -20,10 +20,6 @@ public class DefaultContext<P, R> implements Context<P, R> {
 
     public DefaultContext() {
         this.stopWatch = new StopWatch();
-    }
-
-    public DefaultContext(Enum<?> action) {
-        this.stopWatch = new StopWatch(action.name().toLowerCase());
     }
 
     @Override

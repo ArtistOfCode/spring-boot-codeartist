@@ -1,6 +1,6 @@
 package com.codeartist.component.core.support.curd;
 
-import com.codeartist.component.core.support.business.DefaultContext;
+import com.codeartist.component.core.support.flow.DefaultContext;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,16 +12,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class DefaultEntityContext<P, D> extends DefaultContext<P, D> implements EntityContext<P, D> {
+public class DefaultEntityContext<P, D, R> extends DefaultContext<P, R> implements EntityContext<P, D> {
 
     private EntityAction action;
     private D entity;
     private D oldEntity;
-
-    public DefaultEntityContext(EntityAction action) {
-        super(action);
-        this.action = action;
-    }
 
     @Override
     public void close() {

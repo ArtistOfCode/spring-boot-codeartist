@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * 验证码抽象实现
+ *
  * @author AiJiangnan
  * @date 2024/12/31
  */

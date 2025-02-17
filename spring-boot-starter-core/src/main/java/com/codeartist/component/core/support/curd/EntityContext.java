@@ -1,6 +1,6 @@
 package com.codeartist.component.core.support.curd;
 
-import com.codeartist.component.core.support.business.Context;
+import com.codeartist.component.core.support.flow.Context;
 
 /**
  * 实体操作上下文
@@ -10,7 +10,7 @@ import com.codeartist.component.core.support.business.Context;
  * @author AiJiangnan
  * @date 2023-12-09
  */
-public interface EntityContext<P, D> extends Context<P, D> {
+public interface EntityContext<P, D> extends Context<P> {
 
     EntityAction getAction();
 

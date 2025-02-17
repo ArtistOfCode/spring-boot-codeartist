@@ -37,6 +37,7 @@ public class ServerExceptionHandler {
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
     public ResponseEntity<ErrorResp> assertException(RuntimeException e) {
+        log.warn("", e);
         ErrorResp error = ErrorResp.builder()
                 .service(appProperties.getName())
                 .code(GlobalErrorCode.GLOBAL_BUSINESS_ERROR.name())

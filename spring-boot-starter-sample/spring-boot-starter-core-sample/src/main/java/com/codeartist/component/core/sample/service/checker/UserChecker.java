@@ -2,7 +2,7 @@ package com.codeartist.component.core.sample.service.checker;
 
 import com.codeartist.component.core.sample.entity.User;
 import com.codeartist.component.core.sample.entity.param.UserParam;
-import com.codeartist.component.core.support.curd.EntityConsumer.EntityChecker;
+import com.codeartist.component.core.support.curd.AbstractEntityChecker;
 import com.codeartist.component.core.support.curd.EntityContext;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @date 2023-12-12
  */
 @Component
-public class UserChecker implements EntityChecker<UserParam, User> {
+public class UserChecker extends AbstractEntityChecker<UserParam, User> {
 
     @Override
     public void doAccept(EntityContext<UserParam, User> context) {

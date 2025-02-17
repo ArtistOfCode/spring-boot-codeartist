@@ -14,11 +14,11 @@ import org.springframework.context.PayloadApplicationEvent;
 @Setter
 @Getter
 @JsonIgnoreProperties({"source", "timestamp"})
-public class EntityEvent<T> extends PayloadApplicationEvent<T> {
+public class EntityEvent<D> extends PayloadApplicationEvent<D> {
 
-    private EntityContext<?, T> entityContext;
+    private EntityContext<?, D> entityContext;
 
-    public EntityEvent(Object source, EntityContext<?, T> entityContext) {
+    public EntityEvent(Object source, EntityContext<?, D> entityContext) {
         super(source, entityContext.getEntity());
         this.entityContext = entityContext;
     }

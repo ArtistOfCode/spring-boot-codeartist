@@ -9,13 +9,10 @@ import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.entity.param.PageParam;
 import com.codeartist.component.core.exception.BadRequestException;
 import com.codeartist.component.core.support.auth.AuthContext;
-import com.codeartist.component.core.support.curd.EntityConsumer.EntityChecker;
-import com.codeartist.component.core.support.curd.EntityConsumer.PostEntityConsumer;
-import com.codeartist.component.core.support.curd.EntityConsumer.PreEntityConsumer;
+import com.codeartist.component.core.support.flow.AbstractHandler;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -25,7 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2023/6/1
  */
 @Getter
-public abstract class AbstractService<D, R, P extends PageParam> implements BaseService<R, P> {
+public abstract class AbstractService<D, R, P extends PageParam>
+        extends AbstractHandler<P, R, EntityContext<P, D>> implements BaseService<R, P> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -35,28 +33,17 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
     private BaseConverter<D, P, R> converter;
     @Autowired
     private AuthContext authContext;
-    @Autowired
-    private ObjectProvider<EntityChecker<P, D>> entityCheckers;
-    @Autowired
-    private ObjectProvider<PreEntityConsumer<P, D>> preEntityConsumers;
-    @Autowired
-    private ObjectProvider<PostEntityConsumer<P, D>> postEntityConsumers;
+
+    //region Service
 
     @Override
     public R get(Long id) {
-        D entity = getMapper().selectById(id);
-        return getConverter().toVo(entity);
+        return new GetEntityHandler(id).apply(null);
     }
 
     @Override
     public PageInfo<R> get(P param) {
-        D entity = getConverter().toDo(param);
-
-        QueryWrapper<D> wrapper = Wrappers.query(entity)
-                .orderBy(param.getOrderBy() != null, param.getAsc(), param.getOrderBy());
-
-        IPage<D> page = getMapper().selectPage(param.page(), wrapper);
-        return new PageInfo<>(page, getConverter());
+        return new PageEntityHandler().apply(param);
     }
 
     @Override
@@ -74,10 +61,99 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
         new DeleteEntityHandler(id).apply(null);
     }
 
-    private class SaveEntityHandler extends AbstractEntityHandler<P, D> {
+    //endregion
+
+    //region Handler
+
+    @Override
+    public EntityContext<P, D> createContext(P param) {
+        DefaultEntityContext<P, D, R> context = new DefaultEntityContext<>();
+        context.setParam(param);
+        D entity = getConverter().toDo(param);
+        context.setEntity(entity);
+        return context;
+    }
+
+    @Override
+    public void execute(EntityContext<P, D> context) {
+        throw new UnsupportedOperationException();
+    }
+
+    //endregion
+
+    private class GetEntityHandler extends AbstractEntityHandler<P, D, R> {
+
+        private final Long id;
+
+        private GetEntityHandler(Long id) {
+            super(EntityAction.GET, AbstractService.this);
+            this.id = id;
+        }
+
+        @Override
+        public void basicCheck(P param) {
+        }
+
+        @Override
+        public void execute(EntityContext<P, D> context) {
+            D entity = getMapper().selectById(id);
+            R result = getConverter().toVo(entity);
+            ((DefaultEntityContext<P, D, R>) context).setResult(result);
+        }
+
+        @Override
+        public void publishEvent(EntityContext<P, D> context) {
+        }
+    }
+
+    private class PageEntityHandler extends AbstractEntityHandler<P, D, PageInfo<R>> {
+
+        public PageEntityHandler() {
+            super(EntityAction.QUERY, AbstractService.this);
+        }
+
+        @Override
+        public void basicCheck(P param) {
+        }
+
+        @Override
+        public EntityContext<P, D> createContext(P param) {
+            DefaultEntityContext<P, D, R> context = (DefaultEntityContext<P, D, R>) super.createContext(param);
+            context.setAction(EntityAction.QUERY);
+            return context;
+        }
+
+        @Override
+        public void execute(EntityContext<P, D> context) {
+            P param = context.getParam();
+            D entity = getConverter().toDo(param);
+
+            QueryWrapper<D> wrapper = Wrappers.query(entity)
+                    .orderBy(param.getOrderBy() != null, param.getAsc(), param.getOrderBy());
+
+            IPage<D> page = getMapper().selectPage(param.page(), wrapper);
+            PageInfo<R> pageInfo = new PageInfo<>(page, getConverter());
+            ((DefaultEntityContext<P, D, PageInfo<R>>) context).setResult(pageInfo);
+        }
+
+        @Override
+        public void publishEvent(EntityContext<P, D> context) {
+        }
+    }
+
+    private class SaveEntityHandler extends AbstractEntityHandler<P, D, R> {
 
         public SaveEntityHandler() {
             super(EntityAction.SAVE, AbstractService.this);
+        }
+
+        @Override
+        public EntityContext<P, D> createContext(P param) {
+            EntityContext<P, D> context = super.createContext(param);
+            Long userId = authContext.getUserId();
+            param.setCreateUser(userId);
+            param.setUpdateUser(userId);
+            return context;
         }
 
         @Override
@@ -86,7 +162,7 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
         }
     }
 
-    private class UpdateEntityHandler extends AbstractEntityHandler<P, D> {
+    private class UpdateEntityHandler extends AbstractEntityHandler<P, D, R> {
 
         public UpdateEntityHandler() {
             super(EntityAction.UPDATE, AbstractService.this);
@@ -102,7 +178,10 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
 
         @Override
         public EntityContext<P, D> createContext(P param) {
-            DefaultEntityContext<P, D> context = (DefaultEntityContext<P, D>) super.createContext(param);
+            DefaultEntityContext<P, D, R> context = (DefaultEntityContext<P, D, R>) super.createContext(param);
+            Long userId = authContext.getUserId();
+            param.setUpdateUser(userId);
+
             D old = getMapper().selectById(param.getId());
             context.setOldEntity(old);
             if (old == null) {
@@ -117,7 +196,7 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
         }
     }
 
-    private class DeleteEntityHandler extends AbstractEntityHandler<P, D> {
+    private class DeleteEntityHandler extends AbstractEntityHandler<P, D, R> {
 
         private final Long id;
 
@@ -128,6 +207,9 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
 
         @Override
         public void basicCheck(P param) {
+            if (id == null) {
+                throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
+            }
         }
 
         @Override
@@ -137,7 +219,7 @@ public abstract class AbstractService<D, R, P extends PageParam> implements Base
                 throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
             }
 
-            DefaultEntityContext<P, D> context = (DefaultEntityContext<P, D>) super.createContext(param);
+            DefaultEntityContext<P, D, R> context = (DefaultEntityContext<P, D, R>) super.createContext(param);
             context.setEntity(old);
             context.setOldEntity(old);
             return context;
