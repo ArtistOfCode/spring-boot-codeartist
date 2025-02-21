@@ -29,7 +29,7 @@ public @interface CacheLock {
     /**
      * 缓存过期时间
      */
-    long timeout();
+    int timeout();
 
     /**
      * 缓存过期时间单位

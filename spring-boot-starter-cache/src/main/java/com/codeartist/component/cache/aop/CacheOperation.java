@@ -18,18 +18,39 @@ import java.util.concurrent.TimeUnit;
 @Setter
 public class CacheOperation {
 
+    /**
+     * 缓存动作类型
+     */
     private CacheAction action;
 
-    private String key;
-
-    private long timeout;
-
-    private TimeUnit timeUnit;
-
+    /**
+     * 缓存类型
+     */
     private CacheType type;
 
+    /**
+     * 缓存键
+     */
+    private String key;
+
+    /**
+     * 缓存过期时间
+     */
+    private int timeout;
+
+    /**
+     * 缓存过期时间单位
+     */
+    private TimeUnit timeUnit;
+
+    /**
+     * 本地缓存Bean
+     */
     private String cacheRef;
 
+    /**
+     * Redis缓存Bean
+     */
     private String redisCacheRef;
 
     public Duration getDuration() {

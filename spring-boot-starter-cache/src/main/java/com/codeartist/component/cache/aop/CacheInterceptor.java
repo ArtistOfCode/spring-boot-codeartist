@@ -29,6 +29,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.codeartist.component.core.SpringContext.afterCommit;
+
 /**
  * 缓存注解拦截器
  *
@@ -56,13 +58,13 @@ public class CacheInterceptor implements MethodInterceptor {
                 .stream().collect(Collectors.toMap(CacheOperation::getAction, Function.identity()));
 
         CacheOperation cacheOperation = ops.get(CacheAction.CACHE);
-        CacheOperation cacheDeleteOperation = ops.get(CacheAction.CACHE_DELETE);
-        CacheOperation cacheLockOperation = ops.get(CacheAction.CACHE_LOCK);
+        CacheOperation cacheDeleteOperation = ops.get(CacheAction.EVICT);
+        CacheOperation cacheLockOperation = ops.get(CacheAction.LOCK);
 
         CacheOperationInvoker invoker = () -> {
             try {
                 Object result = invocation.proceed();
-                invokeWithDeleteCache(invocation, cacheDeleteOperation);
+                afterCommit(() -> invokeWithDeleteCache(invocation, cacheDeleteOperation));
                 return result;
             } catch (Throwable ex) {
                 throw new CacheOperationInvoker.ThrowableWrapper(ex);
@@ -79,7 +81,7 @@ public class CacheInterceptor implements MethodInterceptor {
             return invoker.invoke();
         }
 
-        Object returnValue = null;
+        Object returnValue;
         String key = getExpressionKey(invocation, cacheOperation);
         Duration duration = cacheOperation.getDuration();
         Method method = invocation.getMethod();

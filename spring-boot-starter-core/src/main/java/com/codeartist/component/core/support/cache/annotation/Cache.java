@@ -30,7 +30,7 @@ public @interface Cache {
     /**
      * 缓存过期时间
      */
-    long timeout() default -1;
+    int timeout() default -1;
 
     /**
      * 缓存过期时间单位（默认：秒）

@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.util.function.Supplier;
 
 /**
- * 缓存接口
+ * 缓存接口，支持过期时间的缓存中间件，与本地缓存接口不同
  *
  * @author AiJiangnan
  * @date 2021/5/24

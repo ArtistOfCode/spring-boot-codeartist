@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface CacheDelete {
+public @interface CacheEvict {
 
     @AliasFor("key")
     String value() default "";

@@ -7,5 +7,16 @@ package com.codeartist.component.cache.bean;
  * @date 2023/7/15
  */
 public enum CacheAction {
-    CACHE, CACHE_DELETE, CACHE_LOCK
+    /**
+     * 缓存
+     */
+    CACHE,
+    /**
+     * 删除缓存
+     */
+    EVICT,
+    /**
+     * 分布式锁
+     */
+    LOCK
 }

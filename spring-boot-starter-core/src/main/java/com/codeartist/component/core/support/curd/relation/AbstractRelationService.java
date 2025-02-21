@@ -48,7 +48,7 @@ public abstract class AbstractRelationService<D> implements RelationService<D> {
             throw new BadRequestException(GlobalErrorCode.GLOBAL_DATA_NULL_ERROR);
         }
 
-        List<D> entity = param.getIds().stream().map(param::toRelEntity).collect(Collectors.toList());
+        List<D> entity = param.getMapper().apply(param.getId(), param.getIds());
 
         delete(param);
         getMapper().insert(entity);

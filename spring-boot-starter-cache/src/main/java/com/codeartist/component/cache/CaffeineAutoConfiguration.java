@@ -1,5 +1,7 @@
 package com.codeartist.component.cache;
 
+import com.codeartist.component.cache.aop.CacheOperationSource;
+import com.codeartist.component.cache.bean.CacheProperties;
 import com.codeartist.component.cache.core.LocalCache;
 import com.codeartist.component.cache.core.caffeine.CaffeineCache;
 import com.codeartist.component.core.support.metric.Metrics;
@@ -20,11 +22,13 @@ import org.springframework.context.annotation.Configuration;
 public class CaffeineAutoConfiguration {
 
     @Bean
-    public Cache<Object, Object> defaultCache() {
-        return Caffeine.newBuilder().maximumSize(1_000).build();
+    public Cache<Object, Object> defaultCache(CacheProperties properties) {
+        return Caffeine.newBuilder()
+                .maximumSize(properties.getCaffeine().getMaxSize())
+                .build();
     }
 
-    @Bean
+    @Bean(CacheOperationSource.DEFAULT_LOCAL_CACHE_BEAN)
     public LocalCache defaultLocalCache(Cache<Object, Object> defaultCache, Metrics metrics) {
         return new CaffeineCache(defaultCache, metrics);
     }

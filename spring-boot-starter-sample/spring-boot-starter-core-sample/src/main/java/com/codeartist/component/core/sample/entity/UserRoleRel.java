@@ -4,6 +4,8 @@ import com.codeartist.component.core.entity.Relation;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.stream.Collectors;
+
 /**
  * 用户角色关联信息
  *
@@ -15,14 +17,11 @@ import lombok.Setter;
 public class UserRoleRel extends Relation<UserRole> {
 
     public UserRoleRel() {
-        super(UserRole::getUserId, UserRole::getRoleId);
-    }
-
-    @Override
-    public UserRole toRelEntity(Long more) {
-        UserRole userRole = new UserRole();
-        userRole.setUserId(getId());
-        userRole.setRoleId(more);
-        return userRole;
+        super(UserRole::getUserId, UserRole::getRoleId, (id, ids) -> ids.stream().map(e -> {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(id);
+            userRole.setRoleId(e);
+            return userRole;
+        }).collect(Collectors.toList()));
     }
 }

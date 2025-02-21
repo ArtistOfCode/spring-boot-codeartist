@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 /**
  * 表关联参数
@@ -34,12 +36,17 @@ public abstract class Relation<D> {
     private SFunction<D, Long> one;
     @JsonIgnore
     private SFunction<D, Long> more;
+    @JsonIgnore
+    private BiFunction<Long, Set<Long>, List<D>> mapper;
 
     public Relation(SFunction<D, Long> one, SFunction<D, Long> more) {
         this.one = one;
         this.more = more;
     }
 
-    @JsonIgnore
-    public abstract D toRelEntity(Long more);
+    public Relation(SFunction<D, Long> one, SFunction<D, Long> more, BiFunction<Long, Set<Long>, List<D>> mapper) {
+        this.one = one;
+        this.more = more;
+        this.mapper = mapper;
+    }
 }

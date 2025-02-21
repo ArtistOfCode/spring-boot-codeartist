@@ -1,6 +1,7 @@
 package com.codeartist.component.cache.bean;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.time.Duration;
@@ -11,21 +12,27 @@ import java.time.Duration;
  * @author AiJiangnan
  * @date 2021/5/24
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties("spring.cache")
 public class CacheProperties {
 
     private Duration nullTimeout = Duration.ofMinutes(2);
 
-    private Caffeine caffeine = new Caffeine();
+    private Caffeine caffeine = new Caffeine() {{
+        setMaxSize(1000);
+    }};
 
     private Redis redis = new Redis();
 
-    @Data
+    @Getter
+    @Setter
     public static class Caffeine {
+        private int maxSize;
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class Redis {
     }
 }

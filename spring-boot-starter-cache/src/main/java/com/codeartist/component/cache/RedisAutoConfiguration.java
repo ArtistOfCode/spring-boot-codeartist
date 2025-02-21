@@ -1,5 +1,6 @@
 package com.codeartist.component.cache;
 
+import com.codeartist.component.cache.aop.CacheOperationSource;
 import com.codeartist.component.cache.autoconfigure.RedisLettuceConnectionFactory;
 import com.codeartist.component.cache.bean.CacheProperties;
 import com.codeartist.component.cache.core.Cache;
@@ -34,7 +35,7 @@ public class RedisAutoConfiguration {
         return new RedisLettuceConnectionFactory(properties, clientResources).buildStandaloneConnectionFactory();
     }
 
-    @Bean
+    @Bean(CacheOperationSource.DEFAULT_CACHE_BEAN_NAME)
     @ConditionalOnBean(StringRedisTemplate.class)
     public Cache defaultRedisCache(StringRedisTemplate stringRedisTemplate,
                                    CacheProperties cacheProperties,
