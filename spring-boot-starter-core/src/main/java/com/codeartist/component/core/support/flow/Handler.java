@@ -22,4 +22,11 @@ public interface Handler extends BeanNameAware {
     default Enum<?>[] getAction() {
         return new BizAction[]{BizAction.DEFAULT};
     }
+
+    /**
+     * 是否启用（默认：启用）
+     */
+    default boolean isEnabled() {
+        return true;
+    }
 }

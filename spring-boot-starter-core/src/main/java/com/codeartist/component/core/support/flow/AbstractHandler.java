@@ -112,6 +112,9 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
     }
 
     private boolean filterConsumer(Handler handler, C context) {
+        if (!handler.isEnabled()) {
+            return false;
+        }
         if (handler.getAction() == null || handler.getAction().length == 0) {
             return true;
         }

@@ -6,16 +6,18 @@ import com.codeartist.component.core.web.ClientExceptionHandler;
 import com.codeartist.component.core.web.ServerExceptionHandler;
 import com.codeartist.component.core.web.WebMvcConfiguration;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -43,17 +45,15 @@ public class WebMvcAutoConfiguration {
      * Jackson序列化配置
      */
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer customizer(JacksonProperties properties) {
+    public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
             // Long转字符串
-            builder.serializerByType(Long.class, ToStringSerializer.instance);
-            builder.serializerByType(Long.TYPE, ToStringSerializer.instance);
+            builder.serializerByType(Long.class, ToStringSerializer.instance)
+                    .serializerByType(Long.TYPE, ToStringSerializer.instance);
             // LocalDateTime使用DateTime格式化
-            if (properties.getDateFormat() != null) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(properties.getDateFormat());
-                builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
-                builder.deserializerByType(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
-            }
+            builder.serializerByType(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE))
+                    .serializerByType(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ISO_LOCAL_TIME))
+                    .serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         };
     }
 }
