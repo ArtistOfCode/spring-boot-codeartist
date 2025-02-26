@@ -54,7 +54,7 @@ public class MavenBuildCustomizer implements BuildCustomizer<CustomMavenBuild> {
         buildWebMaven(build);
     }
 
-    private static void buildModules(CustomMavenBuild build) {
+    private void buildModules(CustomMavenBuild build) {
         List<String> modules = new ArrayList<>(2);
         modules.add(build.apiArtifactId());
         modules.add(build.webArtifactId());

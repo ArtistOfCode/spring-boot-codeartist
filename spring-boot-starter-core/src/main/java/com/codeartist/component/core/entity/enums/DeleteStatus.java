@@ -1,5 +1,6 @@
 package com.codeartist.component.core.entity.enums;
 
+import com.codeartist.component.core.entity.Bitmask;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,16 +9,12 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public enum DeleteStatus {
+public enum DeleteStatus implements Bitmask {
 
     /**
-     * 有效的
+     * 是否有效
      */
-    VALID(0),
-    /**
-     * 无效的
-     */
-    INVALID(1);
+    VALID(1);
 
-    private final int status;
+    private final int bit;
 }
