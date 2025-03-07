@@ -10,6 +10,16 @@ package com.codeartist.component.core.entity;
 @FunctionalInterface
 public interface Bitmask {
 
+    /**
+     * 位掩码
+     * <p>
+     * <pre><code>
+     * public static final int STATE_A = 1 << 0; // 0001
+     * public static final int STATE_B = 1 << 1; // 0010
+     * public static final int STATE_C = 1 << 2; // 0100
+     * public static final int STATE_D = 1 << 3; // 1000
+     * </code></pre>
+     */
     int getBit();
 
     /**
