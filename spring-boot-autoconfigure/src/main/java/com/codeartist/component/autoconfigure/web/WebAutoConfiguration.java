@@ -1,7 +1,9 @@
 package com.codeartist.component.autoconfigure.web;
 
 import com.codeartist.component.core.SpringContext;
+import com.codeartist.component.core.support.auth.ApiAuthTemplate;
 import com.codeartist.component.core.support.auth.AuthContext;
+import com.codeartist.component.core.support.auth.DefaultApiAuthTemplate;
 import com.codeartist.component.core.support.auth.DefaultAuthContext;
 import com.codeartist.component.core.support.props.AppProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -32,5 +34,11 @@ public class WebAutoConfiguration {
     @ConditionalOnMissingBean(AuthContext.class)
     public AuthContext authContext() {
         return new DefaultAuthContext();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ApiAuthTemplate.class)
+    public ApiAuthTemplate apiAuthTemplate() {
+        return new DefaultApiAuthTemplate();
     }
 }

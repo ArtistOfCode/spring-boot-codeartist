@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -32,10 +33,10 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private ObjectProvider<BizChecker<P, C>> bizCheckers;
-    @Autowired
-    private ObjectProvider<BizConsumer<P, C>> bizConsumers;
+    @Autowired(required = false)
+    private List<BizChecker<P, C>> bizCheckers = Collections.emptyList();
+    @Autowired(required = false)
+    private List<BizConsumer<P, C>> bizConsumers = Collections.emptyList();
 
     @Override
     public void basicCheck(P param) {

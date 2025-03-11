@@ -6,7 +6,8 @@ import com.codeartist.component.core.support.flow.AbstractHandler;
 import com.codeartist.component.core.support.flow.BizChecker;
 import com.codeartist.component.core.support.flow.BizConsumer;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.ObjectProvider;
+
+import java.util.List;
 
 /**
  * 数据库实体处理器抽象实现，整个生命周期接口
@@ -23,12 +24,12 @@ public abstract class AbstractEntityHandler<P extends PageParam, D, R> extends A
     private final AbstractHandler<P, ?, EntityContext<P, D>> bizHandlerDelegate;
 
     @Override
-    public ObjectProvider<BizChecker<P, EntityContext<P, D>>> getBizCheckers() {
+    public List<BizChecker<P, EntityContext<P, D>>> getBizCheckers() {
         return bizHandlerDelegate.getBizCheckers();
     }
 
     @Override
-    public ObjectProvider<BizConsumer<P, EntityContext<P, D>>> getBizConsumers() {
+    public List<BizConsumer<P, EntityContext<P, D>>> getBizConsumers() {
         return bizHandlerDelegate.getBizConsumers();
     }
 

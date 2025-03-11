@@ -31,10 +31,10 @@ public class CaptchaProperties {
         setTimeout(Duration.ofMinutes(3));
     }};
     /**
-     * 邮件验证码配置，默认超时时间：5分钟
+     * 邮件验证码配置，默认超时时间：30分钟
      */
     private CaptchaConfig email = new CaptchaConfig() {{
-        setTimeout(Duration.ofMinutes(5));
+        setTimeout(Duration.ofMinutes(30));
     }};
 
     @Getter
