@@ -2,6 +2,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.codeartist.component.autoconfigure.web.WebAutoConfiguration,\
 com.codeartist.component.autoconfigure.metrics.MetricAutoConfiguration,\
+com.codeartist.component.autoconfigure.resilience.ResilienceAutoConfiguration,\
 com.codeartist.component.autoconfigure.datasource.DataSourceAutoconfiguration,\
 com.codeartist.component.autoconfigure.mybatis.MyBatisAutoConfiguration,\
 com.codeartist.component.autoconfigure.cache.CacheAutoConfiguration,\

@@ -5,8 +5,8 @@ import com.codeartist.component.core.entity.ErrorResp;
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.exception.BadRequestException;
 import com.codeartist.component.core.support.props.AppProperties;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,7 @@ import java.util.Set;
  * @author AiJiangnan
  * @date 2022/4/22
  */
-@Slf4j
-@Order(1)
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class ClientExceptionHandler {
 

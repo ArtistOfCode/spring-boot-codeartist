@@ -51,6 +51,12 @@ public enum GlobalErrorCode implements I18nMessageSource {
      */
     GLOBAL_FORBIDDEN("global.service.forbidden"),
     /**
+     * 全局异常-限流
+     *
+     * @see org.springframework.http.HttpStatus#TOO_MANY_REQUESTS
+     */
+    GLOBAL_RATE_LIMIT("global.service.ratelimiter"),
+    /**
      * 全局异常-验证码已过期
      *
      * @see org.springframework.http.HttpStatus#UNAUTHORIZED

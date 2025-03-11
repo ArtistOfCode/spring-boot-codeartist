@@ -23,7 +23,7 @@ public class WebAuthAutoConfiguration {
     @Bean
     public CredentialHandler credentialHandler() throws NoSuchAlgorithmException {
         MessageDigestCredentialHandler handler = new MessageDigestCredentialHandler();
-        handler.setAlgorithm("MD5");
+        handler.setAlgorithm("SHA-256");
         handler.setSaltLength(16);
         return handler;
     }

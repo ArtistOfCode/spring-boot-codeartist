@@ -8,7 +8,7 @@ logging.config: classpath:logback-spring.xml
 
 # ============================================================
 # Spring Boot i18n
-spring.messages.basename: message/messages
+spring.messages.basename: i18n/messages,message/messages
 
 # ============================================================
 # Spring Jackson

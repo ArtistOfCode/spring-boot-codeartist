@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2020/9/11
  */
 @Slf4j
-@Order(2)
+@Order
 @RestControllerAdvice
 public class ServerExceptionHandler {
 

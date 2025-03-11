@@ -25,14 +25,14 @@ public interface Bitmask {
     /**
      * 开启状态
      */
-    default int turnOn(int flag) {
+    default int on(int flag) {
         return flag | getBit();
     }
 
     /**
      * 关闭状态
      */
-    default int turnOff(int flag) {
+    default int off(int flag) {
         return flag & ~getBit();
     }
 
@@ -46,7 +46,7 @@ public interface Bitmask {
     /**
      * 判断状态是否开启
      */
-    default boolean isStatus(int flag) {
+    default boolean is(int flag) {
         return (flag & getBit()) == getBit();
     }
 }

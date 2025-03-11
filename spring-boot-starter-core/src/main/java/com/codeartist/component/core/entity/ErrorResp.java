@@ -1,5 +1,6 @@
 package com.codeartist.component.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class ErrorResp {
     @Schema(description = "异常提示消息（国际化）")
     private String message;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Schema(description = "异常堆栈，返回给客户端（非生产环境测试使用）")
     private String stackTrace;
 }
