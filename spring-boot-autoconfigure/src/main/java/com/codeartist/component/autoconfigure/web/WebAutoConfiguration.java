@@ -31,13 +31,13 @@ public class WebAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(AuthContext.class)
+    @ConditionalOnMissingBean
     public AuthContext authContext() {
         return new DefaultAuthContext();
     }
 
     @Bean
-    @ConditionalOnMissingBean(ApiAuthTemplate.class)
+    @ConditionalOnMissingBean
     public ApiAuthTemplate apiAuthTemplate() {
         return new DefaultApiAuthTemplate();
     }

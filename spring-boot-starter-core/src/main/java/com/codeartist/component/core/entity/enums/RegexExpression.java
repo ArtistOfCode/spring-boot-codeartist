@@ -13,10 +13,6 @@ public interface RegexExpression {
      */
     String PHONE_REGEX = "^1[345789]\\d{9}$";
     /**
-     * 邮箱正则表达式
-     */
-    String EMAIL_REGEX = "^\\w+((-\\w+)|(\\.\\w+))*@[A-Za-z0-9]+(([.\\-])[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$";
-    /**
      * 用户名正则表达式
      */
     String USERNAME_REGEX = "^[a-zA-Z]+\\w*$";

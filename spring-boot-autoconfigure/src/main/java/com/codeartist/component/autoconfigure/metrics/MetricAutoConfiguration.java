@@ -30,7 +30,7 @@ public class MetricAutoConfiguration {
      * 默认使用指标收集
      */
     @Bean
-    @ConditionalOnMissingBean(Metrics.class)
+    @ConditionalOnMissingBean
     public Metrics defaultMetrics() {
         return new DefaultMetrics();
     }
