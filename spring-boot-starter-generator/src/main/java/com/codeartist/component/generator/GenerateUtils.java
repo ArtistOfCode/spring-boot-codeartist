@@ -82,6 +82,7 @@ public final class GenerateUtils {
                         // .enableFileOverride()
                         // Mapper
                         .mapperBuilder()
+                        .enableFileOverride()
                         .enableBaseResultMap())
                 // .enableFileOverride())
                 .injectionConfig(builder -> builder
@@ -89,13 +90,13 @@ public final class GenerateUtils {
                         .customFile(build -> build.fileName("VO.java")
                                 .templatePath("tpl/entity_vo.java.ftl")
                                 .packageName("entity/vo")
-                                // .enableFileOverride()
+                                .enableFileOverride()
                                 .build())
                         // param
                         .customFile(build -> build.fileName("Param.java")
                                 .templatePath("tpl/entity_param.java.ftl")
                                 .packageName("entity/param")
-                                // .enableFileOverride()
+                                .enableFileOverride()
                                 .build())
                         // converter
                         .customFile(build -> build.fileName("Converter.java")

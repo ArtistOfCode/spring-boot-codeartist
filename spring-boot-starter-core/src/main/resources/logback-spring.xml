@@ -3,7 +3,7 @@
     <include resource="com/codeartist/component/core/logback/file-appender.xml"/>
 
     <!-- 本地环境 -->
-    <springProfile name="local">
+    <springProfile name="(junit | local)">
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>

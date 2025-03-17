@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
  * @date 2024/12/27
  */
 
-@ActiveProfiles({Profiles.JUNIT, Profiles.LOCAL})
+@ActiveProfiles({Profiles.JUNIT})
 @Import(MockAutoConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc

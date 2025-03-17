@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
  * @date 2024/12/27
  */
 
-@ActiveProfiles({Profiles.JUNIT, Profiles.LOCAL})
+@ActiveProfiles({Profiles.JUNIT})
 @Import(MockAutoConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class AbstractSpringRunnerTests {

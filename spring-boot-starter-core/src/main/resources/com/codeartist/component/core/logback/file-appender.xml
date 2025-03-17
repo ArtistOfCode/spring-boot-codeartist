@@ -11,7 +11,7 @@
     <include resource="com/codeartist/component/core/logback/base.xml"/>
 
     <!-- 日志文件策略配置 -->
-    <springProfile name="!local">
+    <springProfile name="(test | prod)">
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <File>${LOG_HOME}/${APP_NAME}.log</File>
             <encoder>
