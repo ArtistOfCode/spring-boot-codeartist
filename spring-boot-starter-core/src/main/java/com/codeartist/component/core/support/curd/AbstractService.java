@@ -97,6 +97,7 @@ public abstract class AbstractService<D, R, P extends PageParam>
         @Override
         public void execute(EntityContext<P, D> context) {
             D entity = getMapper().selectById(id);
+            ((DefaultEntityContext<P, D, R>) context).setEntity(entity);
             R result = getConverter().toVo(entity);
             ((DefaultEntityContext<P, D, R>) context).setResult(result);
         }
