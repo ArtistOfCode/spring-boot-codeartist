@@ -4,6 +4,7 @@ package com.codeartist.component.core.support.auth;
 import com.codeartist.component.core.entity.Principal;
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.exception.BadRequestException;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,7 +32,7 @@ public interface ApiAuthTemplate {
     default void verify() throws BadRequestException {
         Principal principal = getAuthContext().getPrincipal();
         if (principal == null) {
-            throw new BadRequestException(GlobalErrorCode.GLOBAL_UNAUTHORIZED);
+            throw new BadRequestException(HttpStatus.UNAUTHORIZED, GlobalErrorCode.GLOBAL_UNAUTHORIZED);
         }
     }
 }
