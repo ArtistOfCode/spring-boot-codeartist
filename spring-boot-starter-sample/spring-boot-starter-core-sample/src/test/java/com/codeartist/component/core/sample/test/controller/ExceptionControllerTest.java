@@ -7,6 +7,8 @@ import com.codeartist.component.test.AbstractSpringWebRunnerTests;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -25,7 +27,7 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
         mockMvc.perform(get("/api/exception/client"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_CLIENT_ERROR.name()))
-                .andDo(print());
+                .andDo(result -> logger.info(result.getResponse().getContentAsString(StandardCharsets.UTF_8)));
     }
 
     @Test
@@ -33,7 +35,7 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
         mockMvc.perform(get("/api/exception/business"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_BUSINESS_ERROR.name()))
-                .andDo(print());
+                .andDo(result -> logger.info(result.getResponse().getContentAsString(StandardCharsets.UTF_8)));
     }
 
     @Test
@@ -41,7 +43,7 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
         mockMvc.perform(get("/api/exception/server"))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_SERVICE_ERROR.name()))
-                .andDo(print());
+                .andDo(result -> logger.info(result.getResponse().getContentAsString(StandardCharsets.UTF_8)));
     }
 
     @Test
@@ -52,6 +54,6 @@ public class ExceptionControllerTest extends AbstractSpringWebRunnerTests {
                         .content(JSON.toJSONString(param)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(GlobalErrorCode.GLOBAL_CLIENT_ERROR.name()))
-                .andDo(print());
+                .andDo(result -> logger.info(result.getResponse().getContentAsString(StandardCharsets.UTF_8)));
     }
 }

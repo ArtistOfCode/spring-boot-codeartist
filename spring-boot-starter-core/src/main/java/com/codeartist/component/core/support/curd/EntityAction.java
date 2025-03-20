@@ -9,14 +9,6 @@ package com.codeartist.component.core.support.curd;
  */
 public enum EntityAction {
     /**
-     * 通过主键查询单个
-     */
-    GET,
-    /**
-     * 分页查询
-     */
-    QUERY,
-    /**
      * 保存记录
      */
     SAVE,

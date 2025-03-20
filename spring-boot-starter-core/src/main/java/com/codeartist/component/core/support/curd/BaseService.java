@@ -2,18 +2,25 @@ package com.codeartist.component.core.support.curd;
 
 import com.codeartist.component.core.entity.PageInfo;
 
+import java.util.List;
+
 /**
  * 基础服务类
  *
  * @author AiJiangnan
  * @since 2022-08-31
  */
-public interface BaseService<R, P> {
+public interface BaseService<P, R> {
 
     /**
      * 通过ID查询详情
      */
     R get(Long id);
+
+    /**
+     * 条件查询列表
+     */
+    List<R> list(P param);
 
     /**
      * 条件分页查询记录

@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
  * @since 2023-06-29
  */
 @Service
-public class UserService extends AbstractService<User, UserVO, UserParam> {
+public class UserService extends AbstractService<UserParam, User, UserVO> {
 }

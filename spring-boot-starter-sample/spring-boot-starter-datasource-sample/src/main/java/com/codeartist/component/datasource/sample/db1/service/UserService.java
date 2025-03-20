@@ -17,7 +17,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 @Getter
 @Service
-public class UserService extends AbstractService<User, UserVO, UserParam> {
+public class UserService extends AbstractService<UserParam, User, UserVO> {
 
     @Autowired
     private TransactionTemplate db1TransactionTemplate;

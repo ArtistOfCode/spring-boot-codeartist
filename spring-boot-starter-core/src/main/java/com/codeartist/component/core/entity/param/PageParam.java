@@ -1,6 +1,5 @@
 package com.codeartist.component.core.entity.param;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -33,15 +32,15 @@ public abstract class PageParam implements IdParam, UpdateParam {
     @Schema(description = "排序字段")
     private String orderBy;
 
-    public <T> IPage<T> page() {
+    public <T> Page<T> page() {
         return this.page(200);
     }
 
-    public <T> IPage<T> longPage() {
+    public <T> Page<T> longPage() {
         return this.page(1000);
     }
 
-    public <T> IPage<T> page(int maxPageSize) {
+    public <T> Page<T> page(int maxPageSize) {
         this.pageNo = pageNo < 1 ? 1 : pageNo;
         this.pageSize = pageSize < 0 ? 10 : (pageSize >= maxPageSize ? maxPageSize : pageSize);
         return new Page<>(this.pageNo, this.pageSize);

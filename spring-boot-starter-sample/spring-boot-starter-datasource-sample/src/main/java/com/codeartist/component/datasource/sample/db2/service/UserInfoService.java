@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-08-02
  */
 @Service
-public class UserInfoService extends AbstractService<UserInfo, UserInfoVO, UserInfoParam> {
+public class UserInfoService extends AbstractService<UserInfoParam, UserInfo, UserInfoVO> {
 
 }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public abstract class AbstractController<R, P extends PageParam> {
 
     @Autowired
-    private BaseService<R, P> service;
+    private BaseService<P, R> service;
 
     @GetMapping("/{id}")
     @Operation(summary = "详情接口")

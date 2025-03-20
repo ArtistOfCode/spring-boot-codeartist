@@ -1,7 +1,6 @@
 package com.codeartist.component.core.support.curd;
 
 import com.codeartist.component.core.SpringContext;
-import com.codeartist.component.core.entity.param.PageParam;
 import com.codeartist.component.core.support.flow.AbstractHandler;
 import com.codeartist.component.core.support.flow.BizChecker;
 import com.codeartist.component.core.support.flow.BizConsumer;
@@ -18,7 +17,7 @@ import java.util.List;
  * @date 2023/6/1
  */
 @RequiredArgsConstructor
-public abstract class AbstractEntityHandler<P extends PageParam, D, R> extends AbstractHandler<P, R, EntityContext<P, D>> {
+public abstract class AbstractEntityHandler<P, D, R> extends AbstractHandler<P, R, EntityContext<P, D>> {
 
     private final EntityAction action;
     private final AbstractHandler<P, ?, EntityContext<P, D>> bizHandlerDelegate;
