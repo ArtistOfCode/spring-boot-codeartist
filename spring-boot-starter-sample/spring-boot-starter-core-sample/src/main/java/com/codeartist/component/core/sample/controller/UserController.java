@@ -1,6 +1,6 @@
 package com.codeartist.component.core.sample.controller;
 
-import com.codeartist.component.core.entity.Principal;
+import com.codeartist.component.core.entity.DefaultPrincipal;
 import com.codeartist.component.core.sample.entity.param.UserParam;
 import com.codeartist.component.core.sample.entity.vo.UserVO;
 import com.codeartist.component.core.support.auth.AuthContext;
@@ -28,7 +28,7 @@ public class UserController extends AbstractController<UserVO, UserParam> {
 
     @PostMapping("login")
     public void login(@RequestBody UserParam param) {
-        Principal principal = new Principal();
+        DefaultPrincipal principal = new DefaultPrincipal();
         principal.setName(param.getName());
         principal.setUsername(param.getUsername());
         authContext.setPrincipal(principal);

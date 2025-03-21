@@ -1,8 +1,5 @@
 package com.codeartist.component.core.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.Duration;
 import java.util.List;
 
@@ -12,34 +9,15 @@ import java.util.List;
  * @author 艾江南
  * @date 2021/10/14
  */
-@Getter
-@Setter
-public class Principal {
+public interface Principal {
 
-    /**
-     * 用户ID
-     */
-    private Long id;
+    Long getId();
 
-    /**
-     * 用户名称
-     */
-    private String name;
+    String getName();
 
-    /**
-     * 用户名
-     */
-    private String username;
+    String getUsername();
 
-    /**
-     * Token过期时间
-     */
-    private Duration expire;
+    Duration getExpire();
 
-    /**
-     * 拥有权限的接口，格式：<code>Method:Path</code>
-     * <p>
-     * 示例：<code>GET:/api/**</code>
-     */
-    private List<String> paths;
+    List<String> getPaths();
 }
