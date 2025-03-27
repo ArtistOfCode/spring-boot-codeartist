@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since ${date}
  */
 @Service
-public class ${table.serviceName} extends AbstractService<${entity}, ${entity}VO, ${entity}Param> {
+public class ${table.serviceName} extends AbstractService<${entity}Param, ${entity}, ${entity}VO> {
 
 }
