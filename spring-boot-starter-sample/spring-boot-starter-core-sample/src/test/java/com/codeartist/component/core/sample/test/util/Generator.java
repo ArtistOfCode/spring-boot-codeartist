@@ -13,8 +13,9 @@ public class Generator {
 
     public static void main(String[] args) {
         GenerateProperties prop = GenerateProperties.h2();
+        prop.setProjectPath("/Users/aijiangnan/code/codeartist/spring-boot-codeartist/spring-boot-starter-sample/spring-boot-starter-core-sample");
         prop.setPackageName("com.codeartist.component.core.sample");
-        prop.setTables("t_user", "t_role", "t_user_role");
+        prop.setTables("t_config");
         GenerateUtils.generate(prop);
     }
 }

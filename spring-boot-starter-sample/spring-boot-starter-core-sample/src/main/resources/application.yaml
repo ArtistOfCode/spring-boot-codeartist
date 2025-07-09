@@ -12,6 +12,8 @@ spring.datasource.hikari.minimum-idle: 1
 spring.datasource.hikari.maximum-pool-size: 2
 spring.datasource.hikari.max-lifetime: 1200000
 spring.datasource.hikari.connection-test-query: SELECT 1
+# Spring Caffeine Config
+spring.caffeine.config.refresh.cron: '-'
 # API Auth
 spring.api.router.routes:
   - pattern:

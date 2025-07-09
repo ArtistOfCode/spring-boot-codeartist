@@ -6,6 +6,9 @@ import com.codeartist.component.core.support.auth.AuthContext;
 import com.codeartist.component.core.support.auth.DefaultApiAuthTemplate;
 import com.codeartist.component.core.support.auth.DefaultAuthContext;
 import com.codeartist.component.core.support.props.AppProperties;
+import com.codeartist.component.core.support.props.LocalCachePropertySource;
+import com.codeartist.component.core.support.props.LocalPropertyLoader;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +31,12 @@ public class WebAutoConfiguration {
     @Bean
     public SpringContext springContext() {
         return new SpringContext();
+    }
+
+    @Bean
+    @ConditionalOnBean(LocalPropertyLoader.class)
+    public LocalCachePropertySource localCachePropertySource(LocalPropertyLoader loader) {
+        return new LocalCachePropertySource(loader.getCache());
     }
 
     @Bean

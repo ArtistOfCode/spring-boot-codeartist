@@ -28,3 +28,14 @@ INSERT INTO t_role (name) VALUES ('测试角色');
 
 INSERT INTO t_user_role (user_id,role_id) VALUES (1,1);
 INSERT INTO t_user_role (user_id,role_id) VALUES (1,2);
+
+CREATE TABLE `t_config` (
+  `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '配置名称',
+  `config_value` varchar(255) NOT NULL COMMENT '配置值',
+  `deleted` int(2) NOT NULL DEFAULT 0 COMMENT '状态：1：删除，0：有效',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+) COMMENT '系统配置信息';
+
+INSERT INTO t_config (`name`,`config_value`) VALUES ('app.name','spring-boot-starter-sample');
+INSERT INTO t_config (`name`,`config_value`) VALUES ('app.version','1.0.0');
