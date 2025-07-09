@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
  * @date 2023-12-12
  */
 @Component
-@Order(1)
-public class UserChecker extends AbstractEntityChecker<UserParam, User> {
+@Order(3)
+public class UserChecker2 extends AbstractEntityChecker<UserParam, User> {
 
     @Override
     public EntityAction[] getAction() {
@@ -25,6 +25,6 @@ public class UserChecker extends AbstractEntityChecker<UserParam, User> {
 
     @Override
     public void doAccept(EntityContext<UserParam, User> context) {
-        System.out.println("UserChecker.doAccept");
+        System.out.println("UserChecker2.doAccept");
     }
 }

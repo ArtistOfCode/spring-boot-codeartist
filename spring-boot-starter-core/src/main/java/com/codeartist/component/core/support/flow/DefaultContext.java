@@ -1,5 +1,6 @@
 package com.codeartist.component.core.support.flow;
 
+import com.codeartist.component.core.util.MsStopWatch;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StopWatch;
@@ -19,7 +20,7 @@ public class DefaultContext<P, R> implements Context<P> {
     private StopWatch stopWatch;
 
     public DefaultContext() {
-        this.stopWatch = new StopWatch();
+        this.stopWatch = new MsStopWatch();
     }
 
     @Override

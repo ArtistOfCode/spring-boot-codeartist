@@ -89,8 +89,7 @@ public class SpringRedisCache extends AbstractRedisCache {
 
     @Override
     public boolean exist(String key) {
-        Boolean hasKey = stringRedisTemplate.hasKey(key);
-        return Boolean.TRUE.equals(hasKey);
+        return stringRedisTemplate.hasKey(key);
     }
 
     @Override

@@ -199,12 +199,12 @@ public class CustomMavenBuildWriter {
                 || dependency.getScope() == DependencyScope.COMPILE_ONLY);
     }
 
-    private void writeDependencyManagement(IndentingWriter writer, BomContainer boms) {
-        if (boms.isEmpty()) {
+    private void writeDependencyManagement(IndentingWriter writer, BomContainer bom) {
+        if (bom.isEmpty()) {
             return;
         }
         writeElement(writer, "dependencyManagement",
-                () -> writeCollectionElement(writer, "dependencies", boms.items()
+                () -> writeCollectionElement(writer, "dependencies", bom.items()
                                 .sorted(Comparator.comparing(BillOfMaterials::getOrder)).collect(Collectors.toList()),
                         this::writeBom));
     }

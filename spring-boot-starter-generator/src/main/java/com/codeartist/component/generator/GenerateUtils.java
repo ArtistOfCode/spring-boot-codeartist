@@ -91,19 +91,19 @@ public final class GenerateUtils {
                                 .templatePath("tpl/entity_vo.java.ftl")
                                 .packageName("entity/vo")
                                 .enableFileOverride()
-                                .build())
+                        )
                         // param
                         .customFile(build -> build.fileName("Param.java")
                                 .templatePath("tpl/entity_param.java.ftl")
                                 .packageName("entity/param")
                                 .enableFileOverride()
-                                .build())
+                        )
                         // converter
                         .customFile(build -> build.fileName("Converter.java")
                                 .templatePath("tpl/entity_converter.java.ftl")
                                 .packageName("entity/converter")
                                 // .enableFileOverride()
-                                .build())
+                        )
                 )
                 .templateEngine(new FreemarkerTemplateEngine())
                 .execute();

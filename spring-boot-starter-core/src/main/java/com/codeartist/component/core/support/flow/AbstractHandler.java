@@ -13,6 +13,7 @@ import org.springframework.util.StopWatch;
 import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 业务处理器抽象实现，整个生命周期接口
@@ -37,7 +38,7 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
     /**
      * Handler个数超过当前值，使用Map进行缓存
      */
-    @Value("${spring.handler.cache.max.size:20}")
+    @Value("${spring.handler.cache.max.size:10}")
     private Integer handlerCacheMaxSize;
 
     @Autowired(required = false)
@@ -79,7 +80,7 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
     @Override
     public void close(C context) {
         StopWatch stopWatch = context.getStopWatch();
-        if (stopWatch.getTotalTimeMillis() > 200) {
+        if (stopWatch.getTotalTimeMillis() > 100) {
             getLogger().info(stopWatch.prettyPrint());
         } else {
             getLogger().info(stopWatch.shortSummary());
@@ -140,6 +141,12 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
                 logger.debug("Register Handler for action:{}, bean:{}", action, handler.getBeanName());
                 handlerMap.put(action, handlers);
             }
+        }
+
+        if (logger.isDebugEnabled() && !handlerMap.isEmpty()) {
+            handlerMap.forEach((action, handlers) ->
+                    logger.debug("Register Handlers for action: {}, list:{}", action, handlers.stream()
+                            .map(Handler::getBeanName).collect(Collectors.toList())));
         }
     }
 

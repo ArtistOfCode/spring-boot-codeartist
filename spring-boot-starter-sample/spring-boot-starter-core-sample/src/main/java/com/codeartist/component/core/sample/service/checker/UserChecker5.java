@@ -5,7 +5,6 @@ import com.codeartist.component.core.sample.entity.param.UserParam;
 import com.codeartist.component.core.support.curd.AbstractEntityChecker;
 import com.codeartist.component.core.support.curd.EntityAction;
 import com.codeartist.component.core.support.curd.EntityContext;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,8 +14,7 @@ import org.springframework.stereotype.Component;
  * @date 2023-12-12
  */
 @Component
-@Order(1)
-public class UserChecker extends AbstractEntityChecker<UserParam, User> {
+public class UserChecker5 extends AbstractEntityChecker<UserParam, User> {
 
     @Override
     public EntityAction[] getAction() {
@@ -25,6 +23,6 @@ public class UserChecker extends AbstractEntityChecker<UserParam, User> {
 
     @Override
     public void doAccept(EntityContext<UserParam, User> context) {
-        System.out.println("UserChecker.doAccept");
+        System.out.println("UserChecker5.doAccept");
     }
 }

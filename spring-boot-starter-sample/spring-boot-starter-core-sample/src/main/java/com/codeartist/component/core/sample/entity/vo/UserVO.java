@@ -27,7 +27,7 @@ public class UserVO {
     private String username;
 
     @Schema(defaultValue = "密码")
-    @SensitiveFormat(prefix = 1, suffix = 3)
+    @SensitiveFormat(suffix = 3)
     private String password;
 
     @Schema(defaultValue = "状态：1：删除，0：有效")
