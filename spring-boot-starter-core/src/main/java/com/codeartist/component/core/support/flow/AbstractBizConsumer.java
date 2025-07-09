@@ -10,9 +10,17 @@ import lombok.Setter;
  * @author AiJiangnan
  * @date 2025/2/17
  */
-@Getter
-@Setter
-public class AbstractBizConsumer<P, C extends Context<P>> implements BizConsumer<P, C> {
+public class AbstractBizConsumer {
 
-    private String beanName;
+    @Getter
+    @Setter
+    public static abstract class Pre<P, C extends Context<P>> implements BizConsumer.Pre<P, C> {
+        private String beanName;
+    }
+
+    @Getter
+    @Setter
+    public static abstract class Post<P, C extends Context<P>> implements BizConsumer.Post<P, C> {
+        private String beanName;
+    }
 }

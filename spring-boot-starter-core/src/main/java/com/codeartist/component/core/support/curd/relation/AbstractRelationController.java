@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @Getter
 @RequiredArgsConstructor
-public abstract class AbstractRelationController<D, R extends Relation<D>> {
+public abstract class AbstractRelationController<D, R extends Relation> {
 
     @Autowired
     private AbstractRelationService<D> service;
 
     @GetMapping
     @Operation(summary = "查询接口")
-    public Relation<D> get(R param) {
+    public Relation get(R param) {
         return getService().get(param);
     }
 

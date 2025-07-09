@@ -8,11 +8,11 @@ import com.codeartist.component.core.entity.Relation;
  * @author AiJiangnan
  * @date 2023/4/23
  */
-public interface RelationService<D> {
+public interface RelationService {
 
-    Relation<D> get(Relation<D> param);
+    Relation get(Relation param);
 
-    void save(Relation<D> param);
+    void save(Relation param);
 
-    void delete(Relation<D> param);
+    void delete(Relation param);
 }

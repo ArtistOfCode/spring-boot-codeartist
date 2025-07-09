@@ -1,14 +1,12 @@
 package com.codeartist.component.core.support.flow;
 
-import java.util.function.Consumer;
-
 /**
  * 业务检查，生命周期处理接口
  *
  * @author AiJiangnan
  * @date 2023-12-09
  */
-public interface BizChecker<P, C extends Context<P>> extends Handler, Consumer<C> {
+public interface BizChecker<P, C extends Context<P>> extends Handler<C> {
 
     void doAccept(C context);
 

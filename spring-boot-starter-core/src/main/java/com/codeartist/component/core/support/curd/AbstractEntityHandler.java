@@ -4,9 +4,11 @@ import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.support.flow.AbstractHandler;
 import com.codeartist.component.core.support.flow.BizChecker;
 import com.codeartist.component.core.support.flow.BizConsumer;
+import com.codeartist.component.core.support.flow.Handler;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库实体处理器抽象实现，整个生命周期接口
@@ -28,8 +30,28 @@ public abstract class AbstractEntityHandler<P, D, R> extends AbstractHandler<P, 
     }
 
     @Override
-    public List<BizConsumer<P, EntityContext<P, D>>> getBizConsumers() {
-        return bizHandlerDelegate.getBizConsumers();
+    public List<BizConsumer.Pre<P, EntityContext<P, D>>> getPreBizConsumers() {
+        return bizHandlerDelegate.getPreBizConsumers();
+    }
+
+    @Override
+    public List<BizConsumer.Post<P, EntityContext<P, D>>> getPostBizConsumers() {
+        return bizHandlerDelegate.getPostBizConsumers();
+    }
+
+    @Override
+    public Map<Enum<?>, List<Handler<EntityContext<P, D>>>> getCheckerMap() {
+        return bizHandlerDelegate.getCheckerMap();
+    }
+
+    @Override
+    public Map<Enum<?>, List<Handler<EntityContext<P, D>>>> getPreConsumerMap() {
+        return bizHandlerDelegate.getPreConsumerMap();
+    }
+
+    @Override
+    public Map<Enum<?>, List<Handler<EntityContext<P, D>>>> getPostConsumerMap() {
+        return bizHandlerDelegate.getPostConsumerMap();
     }
 
     @Override

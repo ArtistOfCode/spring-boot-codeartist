@@ -29,7 +29,7 @@ public final class GenerateUtils {
 
     public static void generate(GenerateProperties properties) {
         String projectPath = Optional.ofNullable(properties.getProjectPath())
-                .orElse(System.getProperty("user.dir"));
+                .orElseGet(() -> System.getProperty("user.dir"));
 
         loadDatasource(properties);
 

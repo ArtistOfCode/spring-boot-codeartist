@@ -6,11 +6,12 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -33,10 +34,29 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * Handler个数超过当前值，使用Map进行缓存
+     */
+    @Value("${spring.handler.cache.max.size:20}")
+    private Integer handlerCacheMaxSize;
+
     @Autowired(required = false)
     private List<BizChecker<P, C>> bizCheckers = Collections.emptyList();
     @Autowired(required = false)
-    private List<BizConsumer<P, C>> bizConsumers = Collections.emptyList();
+    private List<BizConsumer.Pre<P, C>> preBizConsumers = Collections.emptyList();
+    @Autowired(required = false)
+    private List<BizConsumer.Post<P, C>> postBizConsumers = Collections.emptyList();
+
+    private Map<Enum<?>, List<Handler<C>>> checkerMap = new HashMap<>();
+    private Map<Enum<?>, List<Handler<C>>> preConsumerMap = new HashMap<>();
+    private Map<Enum<?>, List<Handler<C>>> postConsumerMap = new HashMap<>();
+
+    @PostConstruct
+    public void init() {
+        this.initHandlerMap(bizCheckers, checkerMap);
+        this.initHandlerMap(preBizConsumers, preConsumerMap);
+        this.initHandlerMap(postBizConsumers, postConsumerMap);
+    }
 
     @Override
     public void basicCheck(P param) {
@@ -53,9 +73,7 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
 
     @Override
     public void businessCheck(C context) {
-        getBizCheckers().stream()
-                .filter(consumer -> filterConsumer(consumer, context))
-                .forEach(consumer -> doStopWatch(consumer.getBeanName(), context, consumer));
+        this.doHandler(context, "", getBizCheckers(), getCheckerMap());
     }
 
     @Override
@@ -95,29 +113,63 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
     }
 
     protected void preConsumer(C context) {
-        getBizConsumers().stream()
-                .filter(consumer -> filterConsumer(consumer, context))
-                .forEach(consumer -> doStopWatch(consumer.getBeanName() + PRE_TASK_NAME, context,
-                        consumer::preConsumer));
+        this.doHandler(context, PRE_TASK_NAME, getPreBizConsumers(), getPreConsumerMap());
     }
 
     protected void postConsumer(C context) {
-        getBizConsumers().stream()
-                .filter(consumer -> filterConsumer(consumer, context))
-                .forEach(consumer -> doStopWatch(consumer.getBeanName() + POST_TASK_NAME, context,
-                        consumer::postConsumer));
+        this.doHandler(context, POST_TASK_NAME, getPostBizConsumers(), getPostConsumerMap());
     }
 
     protected void publishEvent(C context) {
         SpringContext.publishEvent(new BizEvent<>(this, context));
     }
 
-    private boolean filterConsumer(Handler handler, C context) {
+    private void initHandlerMap(List<? extends Handler<C>> bizHandlers, Map<Enum<?>, List<Handler<C>>> handlerMap) {
+        if (bizHandlers.size() < handlerCacheMaxSize) {
+            return;
+        }
+
+        for (Handler<C> handler : bizHandlers) {
+            if (handler.getAction() == null || handler.getAction().length == 0) {
+                logger.warn("init Handler {} action is null.", handler.getBeanName());
+                continue;
+            }
+            for (Enum<?> action : handler.getAction()) {
+                List<Handler<C>> handlers = handlerMap.getOrDefault(action, new ArrayList<>());
+                handlers.add(handler);
+                logger.debug("Register Handler for action:{}, bean:{}", action, handler.getBeanName());
+                handlerMap.put(action, handlers);
+            }
+        }
+    }
+
+    private void doHandler(C context, String taskName, List<? extends Handler<C>> bizHandlers, Map<Enum<?>, List<Handler<C>>> handlerMap) {
+        if (CollectionUtils.isEmpty(handlerMap)) {
+            bizHandlers.stream()
+                    .filter(h -> filterHandler(h, context))
+                    .forEach(h -> doStopWatch(h.getBeanName() + taskName, context, h));
+            return;
+        }
+
+        List<Handler<C>> handlers = handlerMap.get(context.getAction());
+        if (CollectionUtils.isEmpty(handlers)) {
+            bizHandlers.stream()
+                    .filter(h -> filterHandler(h, context))
+                    .forEach(h -> doStopWatch(h.getBeanName() + taskName, context, h));
+        } else {
+            handlers.stream()
+                    .filter(Handler::isEnabled)
+                    .forEach(h -> doStopWatch(h.getBeanName() + taskName, context, h));
+        }
+    }
+
+    private boolean filterHandler(Handler<C> handler, C context) {
         if (!handler.isEnabled()) {
             return false;
         }
         if (handler.getAction() == null || handler.getAction().length == 0) {
-            return true;
+            logger.warn("Handler {} action is null.", handler.getBeanName());
+            return false;
         }
         return Arrays.stream(handler.getAction()).anyMatch(action -> action == context.getAction());
     }

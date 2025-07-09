@@ -9,7 +9,7 @@ import com.codeartist.component.core.support.flow.Handler;
  * @author AiJiangnan
  * @date 2025/2/17
  */
-public interface EntityHandler extends Handler {
+public interface EntityHandler<C> extends Handler<C> {
 
     @Override
     default EntityAction[] getAction() {

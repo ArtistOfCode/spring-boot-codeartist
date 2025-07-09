@@ -6,19 +6,25 @@ package com.codeartist.component.core.support.flow;
  * @author AiJiangnan
  * @date 2023-12-09
  */
-public interface BizConsumer<P, C extends Context<P>> extends Handler {
+public interface BizConsumer {
 
-    default void doPreConsumer(C context) {
+    interface Pre<P, C extends Context<P>> extends Handler<C> {
+
+        void doPreConsumer(C context);
+
+        @Override
+        default void accept(C c) {
+            doPreConsumer(c);
+        }
     }
 
-    default void doPostConsumer(C context) {
-    }
+    interface Post<P, C extends Context<P>> extends Handler<C> {
 
-    default void preConsumer(C context) {
-        doPreConsumer(context);
-    }
+        void doPostConsumer(C context);
 
-    default void postConsumer(C context) {
-        doPostConsumer(context);
+        @Override
+        default void accept(C c) {
+            doPostConsumer(c);
+        }
     }
 }

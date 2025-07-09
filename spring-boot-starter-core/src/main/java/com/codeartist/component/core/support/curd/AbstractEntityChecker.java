@@ -10,5 +10,5 @@ import com.codeartist.component.core.support.flow.BizChecker;
  * @date 2023-12-09
  */
 public abstract class AbstractEntityChecker<P, D> extends AbstractBizChecker<P, EntityContext<P, D>>
-        implements EntityHandler, BizChecker<P, EntityContext<P, D>> {
+        implements EntityHandler<EntityContext<P, D>>, BizChecker<P, EntityContext<P, D>> {
 }

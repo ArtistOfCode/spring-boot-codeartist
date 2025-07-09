@@ -6,6 +6,8 @@ import org.apache.catalina.realm.MessageDigestCredentialHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -28,5 +30,11 @@ public class CredentialTest {
         log.info(storePassword);
         boolean success = credentialHandler.matches(password, storePassword);
         Assertions.assertTrue(success);
+    }
+
+    @Test
+    void testRandom() {
+        String a = new BigDecimal("10.00010001").setScale(2, RoundingMode.CEILING).stripTrailingZeros().toPlainString();
+        System.out.println(a);
     }
 }

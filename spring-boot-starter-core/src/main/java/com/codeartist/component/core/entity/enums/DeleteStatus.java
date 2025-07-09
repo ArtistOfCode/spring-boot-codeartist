@@ -13,6 +13,7 @@ public enum DeleteStatus implements Bitmask {
 
     /**
      * 是否有效
+     * <code>1 << 0</code>
      */
     VALID(1);
 

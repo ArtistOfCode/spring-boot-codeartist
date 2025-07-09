@@ -20,4 +20,12 @@ public interface BaseConverter<D, P, R> {
     R toVo(D param);
 
     List<R> toVo(List<D> param);
+
+    default D toRel(Long oneId, Long moreId) {
+        return null;
+    }
+
+    default D toInvertRel(Long moreId, Long oneId) {
+        return null;
+    }
 }
