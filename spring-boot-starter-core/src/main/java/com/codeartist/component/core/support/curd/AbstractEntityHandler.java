@@ -6,6 +6,7 @@ import com.codeartist.component.core.support.flow.BizChecker;
 import com.codeartist.component.core.support.flow.BizConsumer;
 import com.codeartist.component.core.support.flow.Handler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.List;
 import java.util.Map;
@@ -25,17 +26,17 @@ public abstract class AbstractEntityHandler<P, D, R> extends AbstractHandler<P, 
     private final AbstractHandler<P, ?, EntityContext<P, D>> bizHandlerDelegate;
 
     @Override
-    public List<BizChecker<P, EntityContext<P, D>>> getBizCheckers() {
+    public ObjectProvider<BizChecker<P, EntityContext<P, D>>> getBizCheckers() {
         return bizHandlerDelegate.getBizCheckers();
     }
 
     @Override
-    public List<BizConsumer.Pre<P, EntityContext<P, D>>> getPreBizConsumers() {
+    public ObjectProvider<BizConsumer.Pre<P, EntityContext<P, D>>> getPreBizConsumers() {
         return bizHandlerDelegate.getPreBizConsumers();
     }
 
     @Override
-    public List<BizConsumer.Post<P, EntityContext<P, D>>> getPostBizConsumers() {
+    public ObjectProvider<BizConsumer.Post<P, EntityContext<P, D>>> getPostBizConsumers() {
         return bizHandlerDelegate.getPostBizConsumers();
     }
 
