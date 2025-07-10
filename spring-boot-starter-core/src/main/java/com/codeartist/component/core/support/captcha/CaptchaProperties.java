@@ -19,10 +19,10 @@ import java.time.Duration;
 public class CaptchaProperties {
 
     /**
-     * 图形验证码配置，默认超时时间：10分钟
+     * 图形验证码配置，默认超时时间：3分钟
      */
     private CaptchaConfig pic = new CaptchaConfig() {{
-        setTimeout(Duration.ofMinutes(10));
+        setTimeout(Duration.ofMinutes(3));
     }};
     /**
      * 短信验证码配置，默认超时时间：3分钟

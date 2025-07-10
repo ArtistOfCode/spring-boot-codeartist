@@ -1,7 +1,6 @@
 package com.codeartist.component.cache.core;
 
-import com.codeartist.component.core.support.cache.CacheType;
-import com.codeartist.component.core.support.metric.Metrics;
+import org.springframework.util.Assert;
 
 import java.util.function.Supplier;
 
@@ -11,11 +10,7 @@ import java.util.function.Supplier;
  * @author AiJiangnan
  * @date 2021/5/25
  */
-public abstract class AbstractLocalCache extends AbstractCacheSupport implements LocalCache {
-
-    public AbstractLocalCache(Metrics metrics) {
-        super(CacheType.LOCAL, metrics);
-    }
+public abstract class AbstractLocalCache implements LocalCache {
 
     protected abstract <T> T doGet(Object key);
 
@@ -31,7 +26,6 @@ public abstract class AbstractLocalCache extends AbstractCacheSupport implements
         checkNull(key);
         ValueWrapper<T> data = doGet(key);
         if (data == null) {
-            miss(key.toString());
             if (valueLoader != null) {
                 T obj = valueLoader.get();
                 doSet(key, (ValueWrapper<T>) () -> obj);
@@ -40,7 +34,6 @@ public abstract class AbstractLocalCache extends AbstractCacheSupport implements
                 return null;
             }
         }
-        hit(key.toString());
         return data.get();
     }
 
@@ -52,5 +45,9 @@ public abstract class AbstractLocalCache extends AbstractCacheSupport implements
     @FunctionalInterface
     protected interface ValueWrapper<T> {
         T get();
+    }
+
+    protected void checkNull(Object key) {
+        Assert.notNull(key, "Cache key is null.");
     }
 }

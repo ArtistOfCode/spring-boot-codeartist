@@ -17,4 +17,20 @@ public interface Metrics {
     void gauge(String name, double value, String... tags);
 
     void summary(String name, double amount, String... tags);
+
+    // @formatter:off
+    class Default implements Metrics {
+
+        @Override
+        public void counter(String name, String... tags) {}
+
+        @Override
+        public <T> void gauge(String name, T obj, ToDoubleFunction<T> valueFunction, String... tags) {}
+
+        @Override
+        public void gauge(String name, double value, String... tags) {}
+
+        @Override
+        public void summary(String name, double amount, String... tags) {}
+    }
 }

@@ -95,7 +95,6 @@ public abstract class AbstractCache extends AbstractCacheSupport implements Cach
         doSet(key, data, duration);
     }
 
-
     protected byte[] serialize(Object data) {
         return JSON.toJSONString(data).getBytes(StandardCharsets.UTF_8);
     }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,9 +33,7 @@ public class DefaultCaptchaTemplate extends AbstractCaptchaTemplate {
 
     @PostConstruct
     public void init() {
-        for (CaptchaType type : CaptchaType.values()) {
-            cacheMap.put(type, this.buildCache(getConfig(type)));
-        }
+        Arrays.stream(CaptchaType.values()).forEach(type -> cacheMap.put(type, this.buildCache(getConfig(type))));
     }
 
     @Override

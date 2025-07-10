@@ -25,8 +25,7 @@ public class LocalCachePropertySource extends PropertySource<LoadingCache<String
 
     @Override
     public Object getProperty(String name) {
-        // 使用get方法读取缓存数据，如果缓存不存在，触发load加载数据并缓存
-        return getSource().get(name);
+        return getSource().getIfPresent(name);
     }
 
     @Override

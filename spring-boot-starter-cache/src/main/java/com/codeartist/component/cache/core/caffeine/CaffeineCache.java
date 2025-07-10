@@ -1,7 +1,6 @@
 package com.codeartist.component.cache.core.caffeine;
 
 import com.codeartist.component.cache.core.AbstractLocalCache;
-import com.codeartist.component.core.support.metric.Metrics;
 import com.github.benmanes.caffeine.cache.Cache;
 
 /**
@@ -14,8 +13,7 @@ public class CaffeineCache extends AbstractLocalCache {
 
     private final Cache<Object, Object> cache;
 
-    public CaffeineCache(Cache<Object, Object> cache, Metrics metrics) {
-        super(metrics);
+    public CaffeineCache(Cache<Object, Object> cache) {
         this.cache = cache;
     }
 

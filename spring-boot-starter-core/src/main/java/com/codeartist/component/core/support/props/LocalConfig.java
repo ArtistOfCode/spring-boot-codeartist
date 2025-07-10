@@ -1,6 +1,9 @@
 package com.codeartist.component.core.support.props;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 配置模型接口
  * <p>
@@ -15,5 +18,12 @@ public interface LocalConfig {
 
     default String getValue() {
         return null;
+    }
+
+    @Getter
+    @Setter
+    class Default implements LocalConfig {
+        private String key;
+        private String value;
     }
 }

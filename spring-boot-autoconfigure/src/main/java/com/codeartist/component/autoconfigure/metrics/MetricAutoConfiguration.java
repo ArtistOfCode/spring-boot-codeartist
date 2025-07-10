@@ -1,6 +1,5 @@
 package com.codeartist.component.autoconfigure.metrics;
 
-import com.codeartist.component.core.support.metric.DefaultMetrics;
 import com.codeartist.component.core.support.metric.Metrics;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
@@ -32,7 +31,7 @@ public class MetricAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Metrics defaultMetrics() {
-        return new DefaultMetrics();
+        return new Metrics.Default();
     }
 
     @ConditionalOnClass(WebMvcTagsProvider.class)

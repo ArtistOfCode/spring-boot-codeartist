@@ -46,6 +46,10 @@ management.info.git.mode: FULL
 management.health.mail.enabled: false
 
 # ============================================================
+# Spring Cloud OpenFeign
+feign.okhttp.enabled: true
+
+# ============================================================
 # Spring Cloud Sleuth
 spring.sleuth.redis.enabled: false
 spring.sleuth.scheduled.enabled: false
