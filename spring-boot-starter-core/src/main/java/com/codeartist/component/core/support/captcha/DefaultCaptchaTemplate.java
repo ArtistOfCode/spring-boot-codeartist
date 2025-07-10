@@ -4,6 +4,7 @@ package com.codeartist.component.core.support.captcha;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.Getter;
+import org.springframework.beans.factory.ObjectProvider;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -22,8 +23,11 @@ public class DefaultCaptchaTemplate extends AbstractCaptchaTemplate {
 
     private final static Map<CaptchaType, Cache<String, CaptchaCache>> cacheMap = new HashMap<>(CaptchaType.values().length);
 
-    public DefaultCaptchaTemplate(CaptchaProperties captchaProperties) {
+    private final ObjectProvider<Caffeine<Object, Object>> caffeineBuilder;
+
+    public DefaultCaptchaTemplate(CaptchaProperties captchaProperties, ObjectProvider<Caffeine<Object, Object>> caffeineBuilder) {
         super(captchaProperties);
+        this.caffeineBuilder = caffeineBuilder;
     }
 
     @PostConstruct
@@ -77,6 +81,9 @@ public class DefaultCaptchaTemplate extends AbstractCaptchaTemplate {
     }
 
     private Cache<String, CaptchaCache> buildCache(CaptchaProperties.CaptchaConfig config) {
-        return Caffeine.newBuilder().expireAfterWrite(config.getTimeout()).maximumSize(config.getMaxSize()).build();
+        return this.caffeineBuilder.getObject()
+                .expireAfterWrite(config.getTimeout())
+                .maximumSize(config.getMaxSize())
+                .build();
     }
 }

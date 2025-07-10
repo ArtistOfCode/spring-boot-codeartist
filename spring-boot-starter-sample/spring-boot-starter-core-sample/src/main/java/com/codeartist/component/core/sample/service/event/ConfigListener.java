@@ -10,6 +10,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 /**
+ * 新增配置事件
+ *
  * @author AiJiangnan
  * @date 2025/7/9
  */
@@ -22,6 +24,9 @@ public class ConfigListener implements ApplicationListener<EntityEvent<Config>> 
     @Override
     public void onApplicationEvent(EntityEvent<Config> event) {
         Config entity = event.getEntityContext().getEntity();
+        if (event.isDelete()) {
+            entity.setConfigValue(null);
+        }
         SpringContext.publishEvent(converter.toVo(entity));
     }
 }

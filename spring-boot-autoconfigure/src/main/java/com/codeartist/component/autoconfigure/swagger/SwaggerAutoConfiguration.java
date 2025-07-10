@@ -1,5 +1,6 @@
 package com.codeartist.component.autoconfigure.swagger;
 
+import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.annotation.Development;
 import com.codeartist.component.core.entity.enums.Environments;
 import com.codeartist.component.core.entity.enums.GlobalConstants;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -37,9 +36,9 @@ public class SwaggerAutoConfiguration {
     private List<String> modulePackages;
 
     @Bean
-    public OpenAPI openAPI(Environment environment) {
+    public OpenAPI openAPI(SpringContext springContext) {
         OpenAPI openAPI = new OpenAPI().info(new Info().title(appName).version("v1"));
-        if (!environment.acceptsProfiles(Profiles.of(Environments.LOCAL.getProfile()))) {
+        if (Environments.LOCAL.not()) {
             openAPI.extensions(Collections.singletonMap("basePath", "/api/" + appName));
         }
         return openAPI;

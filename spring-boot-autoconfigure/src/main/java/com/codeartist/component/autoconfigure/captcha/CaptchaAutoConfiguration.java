@@ -4,6 +4,8 @@ package com.codeartist.component.autoconfigure.captcha;
 import com.codeartist.component.core.support.captcha.CaptchaProperties;
 import com.codeartist.component.core.support.captcha.CaptchaTemplate;
 import com.codeartist.component.core.support.captcha.DefaultCaptchaTemplate;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +23,7 @@ public class CaptchaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CaptchaTemplate captchaTemplate(CaptchaProperties captchaProperties) {
-        return new DefaultCaptchaTemplate(captchaProperties);
+    public CaptchaTemplate captchaTemplate(CaptchaProperties captchaProperties, ObjectProvider<Caffeine<Object, Object>> caffeineBuilder) {
+        return new DefaultCaptchaTemplate(captchaProperties, caffeineBuilder);
     }
 }

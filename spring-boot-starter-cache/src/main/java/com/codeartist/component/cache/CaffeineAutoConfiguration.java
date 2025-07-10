@@ -7,6 +7,7 @@ import com.codeartist.component.cache.core.caffeine.CaffeineCache;
 import com.codeartist.component.core.support.metric.Metrics;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +23,8 @@ import org.springframework.context.annotation.Configuration;
 public class CaffeineAutoConfiguration {
 
     @Bean
-    public Cache<Object, Object> defaultCache(CacheProperties properties) {
-        return Caffeine.newBuilder()
+    public Cache<Object, Object> defaultCache(CacheProperties properties, ObjectProvider<Caffeine<Object, Object>> caffeineBuilder) {
+        return caffeineBuilder.getObject()
                 .maximumSize(properties.getCaffeine().getMaxSize())
                 .build();
     }
