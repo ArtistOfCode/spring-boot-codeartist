@@ -1,13 +1,16 @@
 package com.codeartist.component.core.sample.test.util;
 
 
+import com.codeartist.component.core.SpringContext;
+import com.codeartist.component.core.sample.entity.User;
+import com.codeartist.component.test.AbstractSpringWebRunnerTests;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.realm.MessageDigestCredentialHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -18,7 +21,7 @@ import java.util.UUID;
  * @date 2024/11/19
  */
 @Slf4j
-public class CredentialTest {
+public class CredentialTest extends AbstractSpringWebRunnerTests {
 
     @Test
     void mockLogin() throws NoSuchAlgorithmException {
@@ -34,7 +37,10 @@ public class CredentialTest {
 
     @Test
     void testRandom() {
-        String a = new BigDecimal("10.00010001").setScale(2, RoundingMode.CEILING).stripTrailingZeros().toPlainString();
-        System.out.println(a);
+        User user = new User();
+        BindingResult bindingResult = new BeanPropertyBindingResult(user, "user");
+        bindingResult.rejectValue("name", "name.null");
+        bindingResult.reject("user.null");
+        bindingResult.getAllErrors().forEach(error -> log.error(SpringContext.getMessage(error)));
     }
 }

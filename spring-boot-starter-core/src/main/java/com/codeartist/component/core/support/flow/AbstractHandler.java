@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
@@ -42,12 +41,12 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
     @Value("${spring.handler.cache.max.size:10}")
     private Integer handlerCacheMaxSize;
 
-    @Autowired
-    private ObjectProvider<BizChecker<P, C>> bizCheckers;
     @Autowired(required = false)
-    private ObjectProvider<BizConsumer.Pre<P, C>> preBizConsumers;
+    private List<BizChecker<P, C>> bizCheckers = Collections.emptyList();
     @Autowired(required = false)
-    private ObjectProvider<BizConsumer.Post<P, C>> postBizConsumers;
+    private List<BizConsumer.Pre<P, C>> preBizConsumers = Collections.emptyList();
+    @Autowired(required = false)
+    private List<BizConsumer.Post<P, C>> postBizConsumers = Collections.emptyList();
 
     private Map<Enum<?>, List<Handler<C>>> checkerMap = new HashMap<>();
     private Map<Enum<?>, List<Handler<C>>> preConsumerMap = new HashMap<>();
@@ -126,15 +125,15 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
         SpringContext.publishEvent(new BizEvent<>(this, context));
     }
 
-    private void initHandlerMap(ObjectProvider<? extends Handler<C>> bizHandlers, Map<Enum<?>, List<Handler<C>>> handlerMap) {
-        if (bizHandlers.stream().count() < handlerCacheMaxSize) {
+    private void initHandlerMap(List<? extends Handler<C>> bizHandlers, Map<Enum<?>, List<Handler<C>>> handlerMap) {
+        if (bizHandlers.size() < handlerCacheMaxSize) {
             return;
         }
 
-        bizHandlers.orderedStream().forEach(handler -> {
+        for (Handler<C> handler : bizHandlers) {
             if (handler.getAction() == null || handler.getAction().length == 0) {
                 logger.warn("init Handler {} action is null.", handler.getBeanName());
-                return;
+                continue;
             }
             for (Enum<?> action : handler.getAction()) {
                 List<Handler<C>> handlers = handlerMap.getOrDefault(action, new ArrayList<>());
@@ -142,7 +141,7 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
                 logger.debug("Register Handler for action:{}, bean:{}", action, handler.getBeanName());
                 handlerMap.put(action, handlers);
             }
-        });
+        }
 
         if (logger.isDebugEnabled() && !handlerMap.isEmpty()) {
             handlerMap.forEach((action, handlers) ->
@@ -151,7 +150,7 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
         }
     }
 
-    private void doHandler(C context, String taskName, ObjectProvider<? extends Handler<C>> bizHandlers, Map<Enum<?>, List<Handler<C>>> handlerMap) {
+    private void doHandler(C context, String taskName, List<? extends Handler<C>> bizHandlers, Map<Enum<?>, List<Handler<C>>> handlerMap) {
         if (CollectionUtils.isEmpty(handlerMap)) {
             bizHandlers.stream()
                     .filter(h -> filterHandler(h, context))
