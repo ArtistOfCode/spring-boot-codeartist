@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 /**
  * 验证码校验参数
  *
@@ -24,8 +27,12 @@ public interface CaptchaParam {
     @Getter
     @Setter
     class Default implements CaptchaParam {
+
+        @NotNull
         private CaptchaType type;
+        @NotEmpty
         private String key;
+        @NotEmpty
         private String code;
     }
 }

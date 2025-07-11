@@ -4,6 +4,7 @@ import com.codeartist.component.core.util.MsStopWatch;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StopWatch;
+import org.springframework.validation.Errors;
 
 /**
  * 实体操作上下文默认实现
@@ -18,6 +19,7 @@ public class DefaultContext<P, R> implements Context<P> {
     private P param;
     private R result;
     private StopWatch stopWatch;
+    private Errors errors;
 
     public DefaultContext() {
         this.stopWatch = new MsStopWatch();

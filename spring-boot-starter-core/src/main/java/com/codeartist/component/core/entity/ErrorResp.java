@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * HTTP 接口响应异常实体
  *
@@ -26,6 +29,12 @@ public class ErrorResp {
 
     @Schema(description = "异常提示消息（国际化）")
     private String message;
+
+    @Schema(description = "全局异常提示消息（国际化）")
+    private List<String> errors;
+
+    @Schema(description = "单字段异常提示消息（国际化）")
+    private Map<String, String> fieldErrors;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Schema(description = "异常堆栈，返回给客户端（非生产环境测试使用）")

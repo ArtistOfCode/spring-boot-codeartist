@@ -1,5 +1,7 @@
 package com.codeartist.component.core.support.flow;
 
+import org.springframework.validation.Errors;
+
 /**
  * 业务检查，生命周期处理接口
  *
@@ -7,6 +9,8 @@ package com.codeartist.component.core.support.flow;
  * @date 2023-12-09
  */
 public interface BizChecker<P, C extends Context<P>> extends Handler<C> {
+
+    Errors getErrors();
 
     void doAccept(C context);
 

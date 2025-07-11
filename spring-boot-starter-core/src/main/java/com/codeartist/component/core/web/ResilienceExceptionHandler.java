@@ -3,15 +3,15 @@ package com.codeartist.component.core.web;
 import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.entity.ErrorResp;
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
-import com.codeartist.component.core.support.props.AppProperties;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Collections;
 
 /**
  * Resilience异常处理
@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @Order(1)
 @RestControllerAdvice
-public class ResilienceExceptionHandler {
-
-    @Autowired
-    private AppProperties appProperties;
+public class ResilienceExceptionHandler extends AbstractExceptionHandler {
 
     @ExceptionHandler({CallNotPermittedException.class, RequestNotPermitted.class})
     public ResponseEntity<ErrorResp> rateLimiterException(RuntimeException e) {
@@ -32,6 +29,7 @@ public class ResilienceExceptionHandler {
                 .service(appProperties.getName())
                 .code(GlobalErrorCode.GLOBAL_RATE_LIMIT.name())
                 .message(SpringContext.getMessage(GlobalErrorCode.GLOBAL_RATE_LIMIT.getCode()))
+                .errors(Collections.emptyList())
                 .build();
 
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);

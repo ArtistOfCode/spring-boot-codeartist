@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+
 /**
  * 分页参数
  *
@@ -23,6 +25,7 @@ public abstract class PageParam implements IdParam, UpdateParam {
     /**
      * 每页记录数
      */
+    @Max(value = 1000)
     @Schema(description = "每页记录数")
     private Integer pageSize = 10;
 

@@ -25,6 +25,7 @@ public class UserChecker extends AbstractEntityChecker<UserParam, User> {
 
     @Override
     public void doAccept(EntityContext<UserParam, User> context) {
+        rejectValue("name", "error.code");
         System.out.println("UserChecker.doAccept");
     }
 }

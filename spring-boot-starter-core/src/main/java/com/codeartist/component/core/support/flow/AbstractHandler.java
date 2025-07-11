@@ -1,6 +1,8 @@
 package com.codeartist.component.core.support.flow;
 
 import com.codeartist.component.core.SpringContext;
+import com.codeartist.component.core.entity.enums.GlobalErrorCode;
+import com.codeartist.component.core.exception.BusinessException;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
+import org.springframework.validation.BeanPropertyBindingResult;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -30,6 +33,7 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
 
     private static final String EXECUTE_TASK_NAME = "Execute";
     private static final String EVENT_TASK_NAME = "Event";
+    private static final String CHECKER_TASK_NAME = "#Check";
     private static final String PRE_TASK_NAME = "#Pre";
     private static final String POST_TASK_NAME = "#Post";
 
@@ -69,12 +73,16 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
     public C createContext(P param) {
         DefaultContext<P, R> context = new DefaultContext<>();
         context.setParam(param);
+        context.setErrors(new BeanPropertyBindingResult(context, "context"));
         return (C) context;
     }
 
     @Override
     public void businessCheck(C context) {
-        this.doHandler(context, "", getBizCheckers(), getCheckerMap());
+        this.doHandler(context, CHECKER_TASK_NAME, getBizCheckers(), getCheckerMap());
+        if (context.getErrors().hasErrors()) {
+            throw new BusinessException(GlobalErrorCode.GLOBAL_BUSINESS_ERROR, context.getErrors());
+        }
     }
 
     @Override
@@ -152,22 +160,42 @@ public abstract class AbstractHandler<P, R, C extends Context<P>> implements Biz
 
     private void doHandler(C context, String taskName, List<? extends Handler<C>> bizHandlers, Map<Enum<?>, List<Handler<C>>> handlerMap) {
         if (CollectionUtils.isEmpty(handlerMap)) {
-            bizHandlers.stream()
+            List<? extends Handler<C>> results = bizHandlers.stream()
                     .filter(h -> filterHandler(h, context))
-                    .forEach(h -> doStopWatch(h.getBeanName() + taskName, context, h));
+                    .peek(h -> doStopWatch(h.getBeanName() + taskName, context, h))
+                    .collect(Collectors.toList());
+            if (taskName.equals(CHECKER_TASK_NAME)) {
+                collectCheckerErrors(results, context);
+            }
             return;
         }
 
         List<Handler<C>> handlers = handlerMap.get(context.getAction());
+        List<? extends Handler<C>> results;
         if (CollectionUtils.isEmpty(handlers)) {
-            bizHandlers.stream()
+            results = bizHandlers.stream()
                     .filter(h -> filterHandler(h, context))
-                    .forEach(h -> doStopWatch(h.getBeanName() + taskName, context, h));
+                    .peek(h -> doStopWatch(h.getBeanName() + taskName, context, h))
+                    .collect(Collectors.toList());
         } else {
-            handlers.stream()
+            results = handlers.stream()
                     .filter(Handler::isEnabled)
-                    .forEach(h -> doStopWatch(h.getBeanName() + taskName, context, h));
+                    .peek(h -> doStopWatch(h.getBeanName() + taskName, context, h))
+                    .collect(Collectors.toList());
         }
+        if (taskName.equals(CHECKER_TASK_NAME)) {
+            collectCheckerErrors(results, context);
+        }
+    }
+
+    private void collectCheckerErrors(List<? extends Handler<C>> checkers, C context) {
+        if (CollectionUtils.isEmpty(checkers)) {
+            return;
+        }
+        checkers.stream()
+                .map(c -> (BizChecker<P, C>) c)
+                .filter(c -> Objects.nonNull(c.getErrors()) && c.getErrors().hasErrors())
+                .forEach(c -> context.getErrors().addAllErrors(c.getErrors()));
     }
 
     private boolean filterHandler(Handler<C> handler, C context) {

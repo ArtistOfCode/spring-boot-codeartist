@@ -31,7 +31,7 @@ public class FeignRpcErrorDecoder extends ErrorDecoder.Default {
         try {
             byte[] body = StreamUtils.copyToByteArray(response.body().asInputStream());
             ErrorResp errorResp = JSON.parseObject(body, ErrorResp.class);
-            return new FeignException(methodKey, errorResp);
+            return new FeignException(methodKey, response.status(), errorResp);
         } catch (IOException e) {
             log.error("Feign exception convert error.", e);
             return super.decode(methodKey, response);

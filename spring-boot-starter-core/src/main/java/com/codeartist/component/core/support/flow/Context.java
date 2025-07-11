@@ -1,6 +1,7 @@
 package com.codeartist.component.core.support.flow;
 
 import org.springframework.util.StopWatch;
+import org.springframework.validation.Errors;
 
 /**
  * 业务处理器上下文
@@ -29,6 +30,11 @@ public interface Context<P> {
      * 响应结果
      */
     Object getResult();
+
+    /**
+     * 错误信息
+     */
+    Errors getErrors();
 
     /**
      * 结束操作

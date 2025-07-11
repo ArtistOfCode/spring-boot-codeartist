@@ -6,18 +6,17 @@ import com.codeartist.component.core.entity.enums.Environments;
 import com.codeartist.component.core.entity.enums.GlobalErrorCode;
 import com.codeartist.component.core.exception.BusinessException;
 import com.codeartist.component.core.exception.FeignException;
-import com.codeartist.component.core.support.metric.Metrics;
-import com.codeartist.component.core.support.props.AppProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 
 /**
  * 服务端异常处理
@@ -28,32 +27,25 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Order
 @RestControllerAdvice
-public class ServerExceptionHandler {
+public class ServerExceptionHandler extends AbstractExceptionHandler {
 
-    @Autowired
-    private AppProperties appProperties;
-    @Autowired
-    private Metrics metrics;
-
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
-    public ResponseEntity<ErrorResp> assertException(RuntimeException e) {
-        log.warn("", e);
-        ErrorResp error = ErrorResp.builder()
+    public ErrorResp assertException(RuntimeException e) {
+        String message = SpringContext.getMessage(e.getMessage(), null, e.getMessage());
+        log.warn("Assert error occurred: {}", message, e);
+        return ErrorResp.builder()
                 .service(appProperties.getName())
                 .code(GlobalErrorCode.GLOBAL_BUSINESS_ERROR.name())
-                .message(e.getMessage())
+                .message(message)
+                .errors(Collections.emptyList())
+                .fieldErrors(Collections.emptyMap())
                 .build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResp> businessException(BusinessException e) {
-        ErrorResp error = ErrorResp.builder()
-                .service(appProperties.getName())
-                .code(e.getCode())
-                .message(SpringContext.getMessage(e.getMessagesourceresolvable()))
-                .build();
-
+        ErrorResp error = parseErrors(e.getI18nMessageSource(), e.getErrors());
         return ResponseEntity.status(e.getHttpStatus()).body(error);
     }
 
@@ -61,7 +53,7 @@ public class ServerExceptionHandler {
     public ResponseEntity<ErrorResp> feignException(FeignException e) {
         ErrorResp error = e.getErrorResp();
         log.error("Feign exception at {}, {}:{}, {}", e.getMethodKey(), error.getCode(), error.getMessage(), error.getStackTrace(), e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        return ResponseEntity.status(e.getHttpStatus()).body(error);
     }
 
     @ExceptionHandler(Exception.class)
@@ -78,6 +70,8 @@ public class ServerExceptionHandler {
                 .service(appProperties.getName())
                 .code(GlobalErrorCode.GLOBAL_SERVICE_ERROR.name())
                 .message(SpringContext.getMessage(GlobalErrorCode.GLOBAL_SERVICE_ERROR.getCode()))
+                .errors(Collections.emptyList())
+                .fieldErrors(Collections.emptyMap())
                 .stackTrace(trace(e, method, uri))
                 .build();
 

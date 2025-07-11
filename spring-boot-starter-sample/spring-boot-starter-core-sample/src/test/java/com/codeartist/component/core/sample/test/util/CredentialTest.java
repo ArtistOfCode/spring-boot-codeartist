@@ -1,7 +1,6 @@
 package com.codeartist.component.core.sample.test.util;
 
 
-import com.codeartist.component.core.SpringContext;
 import com.codeartist.component.core.sample.entity.User;
 import com.codeartist.component.test.AbstractSpringWebRunnerTests;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -41,6 +41,14 @@ public class CredentialTest extends AbstractSpringWebRunnerTests {
         BindingResult bindingResult = new BeanPropertyBindingResult(user, "user");
         bindingResult.rejectValue("name", "name.null");
         bindingResult.reject("user.null");
-        bindingResult.getAllErrors().forEach(error -> log.error(SpringContext.getMessage(error)));
+
+        BindingResult bindingResult1 = new BeanPropertyBindingResult(user, "user");
+        bindingResult1.rejectValue("name", "client.name.null");
+        bindingResult1.reject("client.user.null");
+
+        bindingResult.addAllErrors(bindingResult1);
+        bindingResult.getAllErrors().forEach(error -> {
+            log.info(Arrays.toString(error.getCodes()));
+        });
     }
 }
